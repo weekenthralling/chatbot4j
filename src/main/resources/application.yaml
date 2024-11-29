@@ -1,0 +1,56 @@
+server:
+  port: 8080 # 服务运行端口
+  servlet:
+    context-path: /api # 设置上下文路径
+
+spring:
+  application:
+    name: chatbot4j # 应用名称
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/chatbot} # 数据库连接 URL
+    username: ${DB_USERNAME:chatbot} # 数据库用户名
+    password: ${DB_PASSWORD:chatbot} # 数据库密码
+    driver-class-name: org.postgresql.Driver # 数据库驱动类
+    hikari:
+      maximum-pool-size: 10 # 最大连接池大小
+      minimum-idle: 2 # 最小空闲连接数
+      idle-timeout: 30000 # 空闲连接的超时时间（毫秒）
+      connection-timeout: 30000 # 获取连接的超时时间（毫秒）
+      max-lifetime: 1800000 # 连接的最大存活时间（毫秒）
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect # Hibernate 方言
+    hibernate:
+      ddl-auto: update # 自动管理数据库表结构，可选值有 update, create, create-drop, validate, none
+    show-sql: true # 是否打印 SQL 日志
+    properties:
+      hibernate.format_sql: true # 格式化 SQL 日志
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379} # Redis 端口，默认 6379
+      password: ${REDIS_PASSWORD:} # Redis 密码，默认不设置密码
+      database: ${REDIS_DATABASE:0} # Redis 数据库索引，默认 0
+      timeout: ${REDIS_TIMEOUT:2000} # Redis 连接超时时间，单位毫秒
+
+logging:
+  level:
+    root: INFO # 全局日志级别
+    org.springframework: DEBUG # Spring 相关日志级别
+    com.example: DEBUG # 自定义包名的日志级别
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' # 允许所有 Actuator 端点公开
+  endpoint:
+    health:
+      show-details: always # 显示健康检查的详细信息
+  metrics:
+    export:
+      prometheus:
+        enabled: true # 启用 Prometheus 支持
+  tracing:
+    enabled: true # 启用分布式追踪
