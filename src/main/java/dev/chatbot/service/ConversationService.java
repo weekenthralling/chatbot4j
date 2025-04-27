@@ -1,8 +1,8 @@
 package dev.chatbot.service;
 
 import dev.chatbot.domain.Conversation;
+import dev.chatbot.exception.RecordNotFoundException;
 import dev.chatbot.repository.ConversationRepository;
-import dev.chatbot.vo.PageBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -26,53 +27,53 @@ public class ConversationService {
     private final ConversationRepository conversationRepository;
 
     /**
-     * create a new conversation
-     * @param conversation conversation entity
-     */
-    public void createNewConversation(Conversation conversation) {
-        this.conversationRepository.save(conversation);
-    }
-
-    /**
      * get a conversation by id
+     *
      * @param convId conversation id
      * @return conversation entity
      */
-    public Conversation getConversation(String convId) {
-        return this.conversationRepository.findById(UUID.fromString(convId));
+    public Conversation getConversation(UUID convId) {
+        Optional<Conversation> optional = this.conversationRepository.findById(convId);
+        if (optional.isEmpty()) {
+            throw new RecordNotFoundException("No conversation found");
+        }
+
+        if (optional.get().getArchived()) {
+            throw new RecordNotFoundException("Conversation is archived");
+        }
+        return optional.get();
     }
 
     /**
      * delete a conversation by id
+     *
      * @param convId conversation id
      */
     @Transactional
     @Modifying
-    public void deleteConversation(String convId) {
-        this.conversationRepository.deleteById(UUID.fromString(convId));
+    public void deleteConversation(UUID convId) {
+        this.conversationRepository.deleteById(convId);
     }
 
     /**
      * list all conversations by owner
+     *
      * @param owner owner name
      * @return list of conversation entities
      */
-    public PageBean<Conversation> listConversationsByOwner(String owner, int page, int size) {
+    public Page<Conversation> listConversationsByOwner(String owner, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
-        Page<Conversation> conversations = this.conversationRepository.findByOwner(owner, pageable);
-        if (conversations.getContent().isEmpty()) {
-            return PageBean.emptyPage(page, size);
-        }
-        return PageBean.of(page, size, conversations.getTotalElements(), conversations.getContent());
+        return this.conversationRepository.findByOwnerAndArchived(owner, false, pageable);
     }
 
     /**
-     * update a conversation
+     * create or update a conversation
+     *
      * @param conversation conversation entity
      */
     @Transactional
     @Modifying
-    public void updateConversation(Conversation conversation) {
+    public void saveConversation(Conversation conversation) {
         this.conversationRepository.save(conversation);
     }
 }

@@ -1,31 +1,167 @@
 package dev.chatbot.controller;
 
 import dev.chatbot.domain.Conversation;
-import dev.chatbot.dto.ConversationDTO;
+import dev.chatbot.dto.ConversationCreate;
+import dev.chatbot.dto.ConversationUpdate;
 import dev.chatbot.service.ConversationService;
+import dev.chatbot.vo.Chat;
+import dev.chatbot.vo.PageBean;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/conversation")
 @RequiredArgsConstructor
+@Tag(name = "Conversation", description = "Conversation API")
 public class ConversationController {
 
     private final ConversationService conversationService;
 
+    /**
+     * This method is used to create a new conversation.
+     *
+     * @param conversationCreate ConversationDTO
+     * @return ResponseEntity<Void>
+     */
     @PostMapping("/")
-    public ResponseEntity<Void> createConversation(@Validated @RequestBody ConversationDTO conversationDTO) {
+    @Operation(summary = "Create a new conversation", description = "Create a new conversation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successful"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Void> createConversation(@RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
+                                                   @Validated @RequestBody ConversationCreate conversationCreate) {
         Conversation conversation = Conversation.builder()
-                .title(conversationDTO.getTitle())
-                .ragEnabled(conversationDTO.isRagEnabled())
+                .title(conversationCreate.getTitle())
+                .owner(owner)
+                .ragEnabled(conversationCreate.isRagEnabled())
                 .build();
-        conversationService.createNewConversation(conversation);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        conversationService.saveConversation(conversation);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/")
+    @Operation(summary = "List conversations", description = "List conversations")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<PageBean<Chat>> listConnections(@RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(name = "pageSize", defaultValue = "10") int size) {
+        Page<Conversation> listed = conversationService.listConversationsByOwner(owner, page, size);
+        if (listed.getContent().isEmpty()) {
+            new ResponseEntity<>(PageBean.emptyPage(page, size), HttpStatus.OK);
+        }
+        long total = listed.getTotalElements();
+        List<Chat> chats = listed.getContent().stream()
+                .map(conversation -> Chat.builder()
+                        .id(conversation.getId().toString())
+                        .title(conversation.getTitle())
+                        .updatedAt(conversation.getUpdatedAt())
+                        .owner(conversation.getOwner())
+                        .build())
+                .toList();
+
+        PageBean<Chat> resutl = PageBean.of(page, size, total, chats);
+        return new ResponseEntity<>(resutl, HttpStatus.OK);
+    }
+
+    @PutMapping("/{convId}")
+    @Operation(summary = "Update a conversation", description = "Update a conversation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Conversation not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Void> updateConversation(@RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
+                                                   @PathVariable String convId,
+                                                   @Validated @RequestBody ConversationUpdate conversationUpdate) {
+        UUID conversationId = UUID.fromString(convId);
+        Conversation conversation = conversationService.getConversation(conversationId);
+        if (!conversation.getOwner().equals(owner)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        conversation.setTitle(conversationUpdate.getTitle());
+        if (conversationUpdate.isPinned()) {
+            conversation.setPinned(true);
+        }
+        if (conversationUpdate.isRagEnabled()) {
+            conversation.setRagEnabled(true);
+        }
+        conversationService.saveConversation(conversation);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{convId}")
+    @Operation(summary = "Get a conversation", description = "Get a conversation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Conversation not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Chat> getConversation(@RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
+                                               @PathVariable String convId) {
+        UUID conversationId = UUID.fromString(convId);
+        Conversation conversation = conversationService.getConversation(conversationId);
+        if (!conversation.getOwner().equals(owner)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        Chat chat = Chat.builder()
+                .id(conversation.getId().toString())
+                .title(conversation.getTitle())
+                .updatedAt(conversation.getUpdatedAt())
+                .owner(conversation.getOwner())
+                .messages(List.of()) // TODO: get the messages
+                .build();
+        return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{convId}")
+    @Operation(summary = "Delete a conversation", description = "Delete a conversation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Conversation not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Void> deleteConversation(@RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
+                                                   @PathVariable String convId) {
+        UUID conversationId = UUID.fromString(convId);
+        Conversation chat = conversationService.getConversation(conversationId);
+        if (!chat.getOwner().equals(owner)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        conversationService.deleteConversation(conversationId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

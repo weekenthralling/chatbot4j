@@ -3,12 +3,20 @@ server:
   servlet:
     context-path: /api # 设置上下文路径
 
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
 spring:
   application:
     name: chatbot4j # 应用名称
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/chatbot} # 数据库连接 URL
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/chatbot4j} # 数据库连接 URL
     username: ${DB_USERNAME:chatbot} # 数据库用户名
     password: ${DB_PASSWORD:chatbot} # 数据库密码
     driver-class-name: org.postgresql.Driver # 数据库驱动类
@@ -37,20 +45,16 @@ spring:
 logging:
   level:
     root: INFO # 全局日志级别
-    org.springframework: DEBUG # Spring 相关日志级别
+    org.springframework: INFO # Spring 相关日志级别
     com.example: DEBUG # 自定义包名的日志级别
+    org.hibernate.type.descriptor.sql: TRACE # Hibernate SQL 日志级别
+    dev.langchain4j: DEBUG # langchain4j 相关日志级别
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*' # 允许所有 Actuator 端点公开
-  endpoint:
-    health:
-      show-details: always # 显示健康检查的详细信息
-  metrics:
-    export:
-      prometheus:
-        enabled: true # 启用 Prometheus 支持
-  tracing:
-    enabled: true # 启用分布式追踪
+# langchain chat mode config
+llm:
+  base-url: http://127.0.0.1:8000/v1
+  model-name: qwen2.5-72b-instruct
+  api-key: Nothing
+  temperature: 0.8
+  top-p: 0.9
+  max-tokens: 512

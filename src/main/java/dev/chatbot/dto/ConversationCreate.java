@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ConversationDTO {
+public class ConversationCreate {
 
     /**
      * The title of the conversation

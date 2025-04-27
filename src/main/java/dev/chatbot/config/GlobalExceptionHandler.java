@@ -1,5 +1,6 @@
 package dev.chatbot.config;
 
+import dev.chatbot.exception.RecordNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,6 +28,16 @@ public class GlobalExceptionHandler {
             errorMessage.append(fieldError.getField()).append(": ").append(fieldError.getDefaultMessage()).append("; ");
         }
         return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This method is used to handle the RecordNotFoundException.
+     * @param ex RecordNotFoundException
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<String> handleRecordNotFoundException(RecordNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     /**
