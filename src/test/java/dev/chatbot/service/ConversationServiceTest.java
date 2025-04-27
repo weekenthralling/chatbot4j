@@ -2,7 +2,6 @@ package dev.chatbot.service;
 
 import dev.chatbot.ChatBotApplication;
 import dev.chatbot.domain.Conversation;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

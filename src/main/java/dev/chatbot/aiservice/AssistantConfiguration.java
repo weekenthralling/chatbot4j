@@ -1,15 +1,13 @@
 package dev.chatbot.aiservice;
 
 import dev.chatbot.properties.LLMProperties;
-
-import dev.langchain4j.model.chat.listener.ChatModelListener;
-import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
