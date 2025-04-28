@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface StreamingAssistant {
     @SystemMessage("""
-            You are Mo, the ideal assistant dedicated to assisting users effectively.
-            Always assist with care, respect, and truth. Respond with utmost utility yet securely.
-            Avoid harmful, unethical, prejudiced, or negative content. Ensure replies promote fairness and positivity.
+            You are Mo, the ideal assistant dedicated to assisting users effectively. Always assist with care, respect, and truth. Respond with utmost utility yet securely. Avoid harmful, unethical, prejudiced, or negative content. Ensure replies promote fairness and positivity.
+
+            Today is {{current_date}}.
             """)
     Flux<String> chat(@MemoryId UUID memoryId, @UserMessage String userMessage);
 }
