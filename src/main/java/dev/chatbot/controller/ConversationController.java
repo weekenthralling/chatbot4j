@@ -1,11 +1,14 @@
 package dev.chatbot.controller;
 
+import dev.chatbot.domain.ChatHistory;
 import dev.chatbot.domain.Conversation;
 import dev.chatbot.dto.ConversationCreate;
 import dev.chatbot.dto.ConversationUpdate;
+import dev.chatbot.repository.ChatHistoryRepository;
 import dev.chatbot.service.ConversationService;
 import dev.chatbot.vo.Chat;
 import dev.chatbot.vo.PageBean;
+import dev.langchain4j.data.message.ChatMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -27,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+
+import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;;
 
 @RestController
 @RequestMapping("/conversation")
@@ -36,6 +42,7 @@ import java.util.UUID;
 public class ConversationController {
 
     private final ConversationService conversationService;
+    private final ChatHistoryRepository chatHistoryRepository;
 
     /**
      * This method is used to create a new conversation.
@@ -133,12 +140,17 @@ public class ConversationController {
         if (!conversation.getOwner().equals(owner)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        List<ChatMessage> messages = List.of();
+        ChatHistory history = chatHistoryRepository.findById(conversationId).orElse(null);
+        if (Objects.nonNull(history)) {
+            messages = messagesFromJson(history.getMessage());
+        }
         Chat chat = Chat.builder()
                 .id(conversation.getId().toString())
                 .title(conversation.getTitle())
                 .updatedAt(conversation.getUpdatedAt())
                 .owner(conversation.getOwner())
-                .messages(List.of()) // TODO: get the messages
+                .messages(messages)
                 .build();
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }

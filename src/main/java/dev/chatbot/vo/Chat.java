@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.time.Instant;
 import java.util.List;
 
+import dev.langchain4j.data.message.ChatMessage;
+
 @Getter
 @Builder
 public class Chat {
