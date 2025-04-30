@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;;
+import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
 
 @RestController
 @RequestMapping("/conversation")
@@ -92,8 +92,8 @@ public class ConversationController {
                         .build())
                 .toList();
 
-        PageBean<Chat> resutl = PageBean.of(page, size, total, chats);
-        return new ResponseEntity<>(resutl, HttpStatus.OK);
+        PageBean<Chat> result = PageBean.of(page, size, total, chats);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping("/{convId}")
