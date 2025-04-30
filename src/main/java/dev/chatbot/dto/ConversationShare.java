@@ -10,7 +10,7 @@ import lombok.Data;
 public class ConversationShare {
 
     /**
-     * conversaion session id
+     * conversation session id
      */
     @NotEmpty
     private String sessionId;
