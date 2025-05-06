@@ -3,8 +3,7 @@ package dev.chatbot.aiservice;
 import dev.chatbot.properties.LLMProperties;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.StreamingChatLanguageModel;
-import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class AssistantConfiguration {
     private final PersistentChatMemoryStore chatMemoryStore;
 
     @Bean
-    StreamingChatLanguageModel model() {
+    StreamingChatModel model() {
         return OpenAiStreamingChatModel.builder()
                 .baseUrl(llmProperties.getBaseUrl())
                 .apiKey(llmProperties.getApiKey())
@@ -32,11 +31,6 @@ public class AssistantConfiguration {
                 .topP(llmProperties.getTopP())
                 .maxTokens(llmProperties.getMaxTokens())
                 .build();
-    }
-
-    @Bean
-    ChatModelListener chatModelListener() {
-        return new ChatbotChatModelListener();
     }
 
     @Bean
@@ -53,7 +47,7 @@ public class AssistantConfiguration {
     @Scope(SCOPE_PROTOTYPE)
     StreamingAssistant assistant() {
         return AiServices.builder(StreamingAssistant.class)
-                .streamingChatLanguageModel(model())
+                .streamingChatModel(model())
                 .chatMemoryProvider(chatMemoryProvider())
                 .build();
     }
