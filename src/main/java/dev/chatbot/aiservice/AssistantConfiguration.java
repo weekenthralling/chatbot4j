@@ -1,9 +1,12 @@
 package dev.chatbot.aiservice;
 
-import dev.chatbot.properties.LLMProperties;
+import dev.chatbot.aiservice.embeddings.HuggingfaceEmbeddingModel;
+import dev.chatbot.aiservice.properties.EmbedProperties;
+import dev.chatbot.aiservice.properties.LLMProperties;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +20,22 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @RequiredArgsConstructor
 public class AssistantConfiguration {
 
+    private final EmbedProperties embedProperties;
     private final LLMProperties llmProperties;
-
     private final PersistentChatMemoryStore chatMemoryStore;
+
+    @Bean
+    EmbeddingModel embeddingModel() {
+        return HuggingfaceEmbeddingModel.builder()
+                .baseUrl(embedProperties.getBaseUrl())
+                .normalize(true)
+                .truncate(false)
+                .maxRetries(3)
+                .maxSegmentsPerBatch(32)
+                .logRequests(false)
+                .logResponses(false)
+                .build();
+    }
 
     @Bean
     StreamingChatModel model() {

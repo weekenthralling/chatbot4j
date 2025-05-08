@@ -1,4 +1,4 @@
-package dev.chatbot.properties;
+package dev.chatbot.aiservice.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
  * @author zhoumo
  */
 @Data
-@ConfigurationProperties(prefix = "llm")
 @Configuration
+@ConfigurationProperties(prefix = "chatbot.llm")
 public class LLMProperties {
 
     /**
