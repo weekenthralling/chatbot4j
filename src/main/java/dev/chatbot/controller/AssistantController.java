@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.util.UUID;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 
 @RestController
@@ -22,7 +24,7 @@ public class AssistantController {
 
     private final StreamingAssistant assistant;
 
-    @PostMapping("/assistant")
+    @PostMapping(value = "/assistant", produces = TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "Assistant API", description = "Get assistant response")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response"),
