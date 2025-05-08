@@ -6,6 +6,7 @@ import dev.chatbot.aiservice.properties.LLMProperties;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+
+import java.util.List;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
@@ -23,6 +26,7 @@ public class AssistantConfiguration {
     private final EmbedProperties embedProperties;
     private final LLMProperties llmProperties;
     private final PersistentChatMemoryStore chatMemoryStore;
+    private final List<ChatModelListener> listeners;
 
     @Bean
     EmbeddingModel embeddingModel() {
@@ -46,6 +50,7 @@ public class AssistantConfiguration {
                 .temperature(llmProperties.getTemperature())
                 .topP(llmProperties.getTopP())
                 .maxTokens(llmProperties.getMaxTokens())
+                .listeners(listeners)
                 .build();
     }
 
