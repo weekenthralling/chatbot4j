@@ -14,7 +14,6 @@ springdoc:
 spring:
   application:
     name: chatbot4j # Application name
-
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/chatbot4j} # Database connection URL
     username: ${DB_USERNAME:chatbot} # Database username
@@ -26,7 +25,6 @@ spring:
       idle-timeout: 30000 # Idle connection timeout (milliseconds)
       connection-timeout: 30000 # Connection acquisition timeout (milliseconds)
       max-lifetime: 1800000 # Maximum connection lifetime (milliseconds)
-
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect # Hibernate dialect
     hibernate:
@@ -50,11 +48,14 @@ logging:
     org.hibernate.type.descriptor.sql: TRACE # Hibernate SQL log level
     dev.langchain4j: DEBUG # langchain4j-related log level
 
-# langchain chat mode config
-llm:
-  base-url: ${LLM_BASE_URL:https://api.openai.com/v1/} # Base URL for LLM service
-  model-name: ${LLM_MODEL:gpt-4o-mini} # LLM model name
-  api-key: ${LLM_API_KEY:demo} # API key for LLM service
-  temperature: 0.8
-  top-p: 0.9
-  max-tokens: 512
+# chatbot model config
+chatbot:
+  llm:
+    base-url: ${LLM_BASE_URL:https://api.openai.com/v1/} # Base URL for LLM service
+    model-name: ${LLM_MODEL:gpt-4o-mini} # LLM model name
+    api-key: ${LLM_API_KEY:demo} # API key for LLM service
+    temperature: 0.8
+    top-p: 0.9
+    max-tokens: 512
+  embedding:
+    base-url: ${EMBEDDING_BASE_URL:https://api.openai.com} # Base URL for embedding service
