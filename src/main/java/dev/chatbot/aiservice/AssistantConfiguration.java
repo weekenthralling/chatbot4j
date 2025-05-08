@@ -61,10 +61,11 @@ public class AssistantConfiguration {
 
     @Bean
     @Scope(SCOPE_PROTOTYPE)
-    StreamingAssistant assistant() {
+    StreamingAssistant assistant(StreamingChatModel model,
+                                 ChatMemoryProvider chatMemoryProvider) {
         return AiServices.builder(StreamingAssistant.class)
-                .streamingChatModel(model())
-                .chatMemoryProvider(chatMemoryProvider())
+                .streamingChatModel(model)
+                .chatMemoryProvider(chatMemoryProvider)
                 .build();
     }
 }
