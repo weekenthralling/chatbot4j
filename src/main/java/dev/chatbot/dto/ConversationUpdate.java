@@ -7,7 +7,7 @@ import lombok.Setter;
 
 /**
  * DTO for updating a conversation
- * 
+ *
  * @author zhoumo
  */
 @Getter
@@ -20,5 +20,4 @@ public class ConversationUpdate extends ConversationCreate {
      * pinned conversion or not
      */
     private boolean pinned;
-
 }

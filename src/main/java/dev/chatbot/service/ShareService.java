@@ -1,5 +1,14 @@
 package dev.chatbot.service;
 
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import dev.chatbot.domain.ChatHistory;
 import dev.chatbot.domain.Conversation;
 import dev.chatbot.domain.Share;
@@ -8,21 +17,13 @@ import dev.chatbot.exception.RecordNotFoundException;
 import dev.chatbot.repository.ChatHistoryRepository;
 import dev.chatbot.repository.ConversationRepository;
 import dev.chatbot.repository.ShareRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.UUID;
-
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * ShareService is a service class that handles operations related to
  * sharing conversations.
  * It provides methods to save, delete, and retrieve shared
  * conversations.
- * 
+ *
  * @author zhoumo
  */
 @Slf4j
@@ -36,7 +37,7 @@ public class ShareService {
 
     /**
      * save a share
-     * 
+     *
      * @param share
      */
     @Modifying
@@ -45,7 +46,8 @@ public class ShareService {
 
         UUID conversationId = UUID.fromString(share.getSessionId());
         // check if the conversation exists
-        Conversation conversation = conversationRepository.findById(conversationId)
+        Conversation conversation = conversationRepository
+                .findById(conversationId)
                 .orElseThrow(() -> new RecordNotFoundException("Conversation not found"));
 
         // check if the conversation is archived
@@ -53,7 +55,8 @@ public class ShareService {
             throw new IllegalArgumentException("Conversation is archived");
         }
 
-        ChatHistory history = chatHistoryRepository.findById(conversationId)
+        ChatHistory history = chatHistoryRepository
+                .findById(conversationId)
                 .orElseThrow(() -> new RecordNotFoundException("Conversation message is empty"));
 
         // TODO: Replace with actual URL generation logic
@@ -69,7 +72,7 @@ public class ShareService {
 
     /**
      * delete a share by id
-     * 
+     *
      * @param shareId
      */
     @Transactional
@@ -80,12 +83,11 @@ public class ShareService {
 
     /**
      * get a share by id
-     * 
+     *
      * @param shareId
      * @return
      */
     public Share getShare(UUID shareId) {
-        return shareRepository.findById(shareId)
-                .orElseThrow(() -> new RecordNotFoundException("Share not found"));
+        return shareRepository.findById(shareId).orElseThrow(() -> new RecordNotFoundException("Share not found"));
     }
 }

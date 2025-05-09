@@ -1,6 +1,17 @@
 package dev.chatbot.domain;
 
+import java.time.Instant;
+import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,29 +25,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.Instant;
-import java.util.UUID;
 
 /**
  * Conversation is an entity class that represents a conversation in the system.
- * 
+ *
  * @author zhoumo
  */
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "conversation", indexes = {
-        @Index(name = "idx_conversation_owner", columnList = "owner")
-})
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@Table(
+        name = "conversation",
+        indexes = {@Index(name = "idx_conversation_owner", columnList = "owner")})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @SQLDelete(sql = "UPDATE conversation SET archived = true WHERE id = ?")
 @SQLRestriction("archived = false")
 @Builder

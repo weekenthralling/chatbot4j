@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * DTO for AssistantMessage
- * 
+ *
  * @author zhoumo
  */
 @Data

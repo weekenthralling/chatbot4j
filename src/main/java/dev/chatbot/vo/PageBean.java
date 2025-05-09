@@ -1,17 +1,18 @@
 package dev.chatbot.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * PageBean is a generic class that represents a paginated response.
  * It contains information about the current page number, page size,
  * total number of items, and a list of items for the current page.
- * 
+ *
  * @author zhoumo
  * @param <T>
  */

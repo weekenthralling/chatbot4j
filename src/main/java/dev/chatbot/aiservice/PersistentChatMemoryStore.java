@@ -1,14 +1,16 @@
 package dev.chatbot.aiservice;
 
-import dev.chatbot.domain.ChatHistory;
-import dev.chatbot.repository.ChatHistoryRepository;
-import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.store.memory.chat.ChatMemoryStore;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+
+import dev.chatbot.domain.ChatHistory;
+import dev.chatbot.repository.ChatHistoryRepository;
 
 import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
 import static dev.langchain4j.data.message.ChatMessageSerializer.messagesToJson;
@@ -21,7 +23,7 @@ import static dev.langchain4j.data.message.ChatMessageSerializer.messagesToJson;
  * The class provides methods to get, update, and delete chat messages.
  * It uses the ChatHistoryRepository to interact with the database.
  * <p>
- * 
+ *
  * @author zhoumo
  */
 @Component
@@ -45,12 +47,12 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
     @Override
     public void updateMessages(Object memoryId, List<ChatMessage> messages) {
         String chatMessages = messagesToJson(messages);
-        ChatHistory chatHistory = chatHistoryRepository.findById((UUID) memoryId)
-                .orElseGet(
-                        () -> ChatHistory.builder()
-                                .id((UUID) memoryId)
-                                .archived(false)
-                                .build());
+        ChatHistory chatHistory = chatHistoryRepository
+                .findById((UUID) memoryId)
+                .orElseGet(() -> ChatHistory.builder()
+                        .id((UUID) memoryId)
+                        .archived(false)
+                        .build());
         chatHistory.setMessage(chatMessages);
         chatHistoryRepository.save(chatHistory);
     }
