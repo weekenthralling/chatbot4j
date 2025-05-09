@@ -1,8 +1,18 @@
 package dev.chatbot.aiservice;
 
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+
+import java.util.List;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
 import dev.chatbot.aiservice.embeddings.HuggingfaceEmbeddingModel;
 import dev.chatbot.aiservice.properties.EmbedProperties;
 import dev.chatbot.aiservice.properties.LLMProperties;
+import dev.chatbot.aiservice.tools.DatetimeTool;
+import dev.chatbot.aiservice.tools.WeatherTool;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -11,13 +21,6 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-
-import java.util.List;
-
-import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 @Configuration
 @RequiredArgsConstructor
@@ -66,10 +69,17 @@ public class AssistantConfiguration {
 
     @Bean
     @Scope(SCOPE_PROTOTYPE)
+    public List<Object> toolkit() {
+        return List.of(new WeatherTool(), new DatetimeTool());
+    }
+
+    @Bean
+    @Scope(SCOPE_PROTOTYPE)
     StreamingAssistant assistant(StreamingChatModel model,
-            ChatMemoryProvider chatMemoryProvider) {
+        ChatMemoryProvider chatMemoryProvider, List<Object> toolkit) {
         return AiServices.builder(StreamingAssistant.class)
                 .streamingChatModel(model)
+            .tools(toolkit)
                 .chatMemoryProvider(chatMemoryProvider)
                 .build();
     }
