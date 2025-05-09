@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.chatbot</groupId>
@@ -23,25 +23,25 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot 核心依赖 -->
+        <!--SpringBoot Core Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Spring Web (用于构建 REST API 和 Web 应用) -->
+        <!--SpringWeb (for building REST APIs and web applications) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Boot 数据访问 (JPA + Hibernate) -->
+        <!--SpringBoot Data Access (JPA + Hibernate) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- 数据库连接池 HikariCP -->
+        <!--Database Connection Pool HikariCP -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
@@ -52,33 +52,34 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
-        <!-- 数据库驱动 -->
+        <!--Database Driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Spring Boot 日志 (默认集成 Logback) -->
+        <!--SpringBoot Log (default integration Logback) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
-        <!-- Spring Boot 测试 -->
+        <!--SpringBoot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <exclusions>
+                <!--Exclude JUnit 4 dependencies -->
                 <exclusion>
                     <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId> <!-- 排除 JUnit 4 依赖 -->
+                    <artifactId>junit-vintage-engine</artifactId> 
                 </exclusion>
             </exclusions>
         </dependency>
 
-        <!--Spring Boot DevTools（开发时热部署）-->
+        <!--Spring Boot DevTools (Hot Deployment during Development)-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -98,6 +99,7 @@
             <scope>annotationProcessor</scope>
         </dependency>
 
+        <!-- Spring Boot Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -111,6 +113,7 @@
             <version>2.8.8</version>
         </dependency>
 
+        <!-- LangChain4j Dependencies Start-->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-spring-boot-starter</artifactId>
@@ -134,12 +137,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <!-- LangChain4j Dependencies End-->
     </dependencies>
 
-    <!-- 构建设置 -->
+    <!--Build Settings -->
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin，用于设置 JDK 版本 -->
+            <!--Maven Compiler Plugin, used to set JDK version -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -150,7 +154,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Spring Boot 打包插件 -->
+            <!--Spring Boot Packaging Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

@@ -5,6 +5,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * DTO for creating a conversation
+ * 
+ * @author zhoumo
+ */
 @Getter
 @Setter
 public class ConversationCreate {

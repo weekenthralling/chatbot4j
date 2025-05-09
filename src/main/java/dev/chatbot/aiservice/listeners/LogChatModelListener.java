@@ -14,8 +14,12 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.stereotype.Component;
 
 /**
- * <br>
- *
+ * LogChatModelListener is a listener that logs chat model events at the
+ * DEBUG level.
+ * It implements the ChatModelListener interface and provides methods to handle
+ * request, response, and error events.
+ * <p>
+ * 
  * @author af su
  * @version v1.0
  */
@@ -44,7 +48,7 @@ public class LogChatModelListener implements ChatModelListener {
 class DebugLoggingCondition implements Condition {
 	@Override
 	public boolean matches(@Nonnull ConditionContext context,
-	                       @Nonnull AnnotatedTypeMetadata metadata) {
+			@Nonnull AnnotatedTypeMetadata metadata) {
 		return LoggerFactory.getLogger("dev.chatbot").isDebugEnabled();
 	}
 }

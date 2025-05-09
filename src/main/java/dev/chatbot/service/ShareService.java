@@ -18,6 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * ShareService is a service class that handles operations related to
+ * sharing conversations.
+ * It provides methods to save, delete, and retrieve shared
+ * conversations.
+ * 
  * @author zhoumo
  */
 @Slf4j
@@ -31,6 +36,7 @@ public class ShareService {
 
     /**
      * save a share
+     * 
      * @param share
      */
     @Modifying
@@ -63,6 +69,7 @@ public class ShareService {
 
     /**
      * delete a share by id
+     * 
      * @param shareId
      */
     @Transactional

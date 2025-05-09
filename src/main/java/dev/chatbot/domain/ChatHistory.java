@@ -21,13 +21,16 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
+ * ChatHistory is a domain class that represents the chat history of a
+ * conversation.
+ * 
  * @author zhoumo
  */
 @Getter
 @Setter
 @ToString
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @SQLDelete(sql = "UPDATE chat_history SET archived = true WHERE id = ?")
 @SQLRestriction("archived = false")
 @Builder

@@ -1,0 +1,6 @@
+{
+    "java.format.settings.profile": "GoogleStyle",
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+    "java.configuration.updateBuildConfiguration": "interactive",
+}

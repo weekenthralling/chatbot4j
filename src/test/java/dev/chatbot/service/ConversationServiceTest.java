@@ -15,7 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * ConversationServiceTest is a test class for testing the ConversationService class
+ * ConversationServiceTest is a test class for testing the ConversationService
+ * class
+ * 
  * @author zhoumo
  */
 @SpringBootTest(classes = ChatBotApplication.class)

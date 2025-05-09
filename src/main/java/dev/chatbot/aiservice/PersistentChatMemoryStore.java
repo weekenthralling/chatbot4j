@@ -13,7 +13,6 @@ import java.util.UUID;
 import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
 import static dev.langchain4j.data.message.ChatMessageSerializer.messagesToJson;
 
-
 /**
  * PersistentChatMemoryStore is a persistent store for chat messages.
  * It uses a database to store chat messages and retrieve them when needed.
@@ -22,6 +21,7 @@ import static dev.langchain4j.data.message.ChatMessageSerializer.messagesToJson;
  * The class provides methods to get, update, and delete chat messages.
  * It uses the ChatHistoryRepository to interact with the database.
  * <p>
+ * 
  * @author zhoumo
  */
 @Component
@@ -50,8 +50,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
                         () -> ChatHistory.builder()
                                 .id((UUID) memoryId)
                                 .archived(false)
-                                .build()
-                );
+                                .build());
         chatHistory.setMessage(chatMessages);
         chatHistoryRepository.save(chatHistory);
     }
