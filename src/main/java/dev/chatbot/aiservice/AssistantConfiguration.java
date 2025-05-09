@@ -58,16 +58,16 @@ public class AssistantConfiguration {
     @Scope(SCOPE_PROTOTYPE)
     ChatMemoryProvider chatMemoryProvider() {
         return memoryId -> MessageWindowChatMemory.builder()
-        .id(memoryId)
-        .maxMessages(10)
-        .chatMemoryStore(chatMemoryStore)
-        .build();
+                .id(memoryId)
+                .maxMessages(10)
+                .chatMemoryStore(chatMemoryStore)
+                .build();
     }
 
     @Bean
     @Scope(SCOPE_PROTOTYPE)
     StreamingAssistant assistant(StreamingChatModel model,
-                                 ChatMemoryProvider chatMemoryProvider) {
+            ChatMemoryProvider chatMemoryProvider) {
         return AiServices.builder(StreamingAssistant.class)
                 .streamingChatModel(model)
                 .chatMemoryProvider(chatMemoryProvider)

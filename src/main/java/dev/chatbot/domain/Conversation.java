@@ -25,6 +25,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
+ * Conversation is an entity class that represents a conversation in the system.
+ * 
  * @author zhoumo
  */
 @Getter
@@ -34,7 +36,7 @@ import java.util.UUID;
 @Table(name = "conversation", indexes = {
         @Index(name = "idx_conversation_owner", columnList = "owner")
 })
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @SQLDelete(sql = "UPDATE conversation SET archived = true WHERE id = ?")
 @SQLRestriction("archived = false")
 @Builder

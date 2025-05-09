@@ -20,13 +20,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
+/**
+ * ShareController is a REST controller that handles requests related to
+ * sharing conversations.
+ * It provides endpoints for sharing, unsharing, and retrieving shared
+ * conversations.
+ * 
+ * @author zhoumo
+ */
 @RestController
 @RequestMapping("/share")
 @RequiredArgsConstructor
 @Tag(name = "Share", description = "Share API")
 public class ShareController {
-    
+
     private final ShareService shareService;
 
     @PostMapping("/")

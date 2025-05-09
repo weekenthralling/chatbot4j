@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 /**
+ * DTO for sharing a conversation
+ * 
  * @author zhoumo
  */
 @Data

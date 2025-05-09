@@ -21,6 +21,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
+ * Share is an entity class that represents a shareable item.
+ * 
  * @author zhoumo
  */
 @Getter
@@ -30,7 +32,7 @@ import java.util.UUID;
 @Table(name = "share", indexes = {
         @Index(name = "idx_share_owner", columnList = "owner")
 })
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,7 +41,7 @@ public class Share {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;  // UUID primary key
+    private UUID id; // UUID primary key
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String title;
@@ -51,7 +53,7 @@ public class Share {
     private String url;
 
     @Column(nullable = false, columnDefinition = "JSONB")
-    private String snapshotRef;  // This can be a JSON string or use a separate entity
+    private String snapshotRef; // This can be a JSON string or use a separate entity
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

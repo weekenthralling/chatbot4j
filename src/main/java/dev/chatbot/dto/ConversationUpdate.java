@@ -7,12 +7,14 @@ import lombok.Setter;
 
 /**
  * DTO for updating a conversation
+ * 
+ * @author zhoumo
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConversationUpdate extends ConversationCreate{
+public class ConversationUpdate extends ConversationCreate {
 
     /**
      * pinned conversion or not

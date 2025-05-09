@@ -5,9 +5,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * LLMProperties is a configuration class that holds properties related to the LLM (Language Model).
- * It is annotated with @ConfigurationProperties to bind properties from the application configuration file.
- * The prefix "llm" indicates that these properties are under the "llm" section in the configuration file.
+ * LLMProperties is a configuration class that holds properties related to the
+ * LLM (Language Model).
+ * It is annotated with @ConfigurationProperties to bind properties from the
+ * application configuration file.
+ * The prefix "llm" indicates that these properties are under the "llm" section
+ * in the configuration file.
  * 
  * @author zhoumo
  */

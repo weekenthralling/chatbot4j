@@ -1,6 +1,5 @@
 package dev.chatbot.vo;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * PageBean is a generic class that represents a paginated response.
+ * It contains information about the current page number, page size,
+ * total number of items, and a list of items for the current page.
+ * 
  * @author zhoumo
  * @param <T>
  */
@@ -17,23 +20,23 @@ import java.util.List;
 public class PageBean<T> {
 
     /**
-     * 页号
+     * page number
      */
     @JsonProperty("current")
     private Integer pageNo;
 
     /**
-     * 分页大小
+     * page size
      */
     private Integer pageSize;
 
     /**
-     * 总数
+     * total number of items
      */
     private Long total;
 
     /**
-     * 列表信息
+     * items for the current page
      */
     private List<T> list;
 
@@ -49,9 +52,9 @@ public class PageBean<T> {
     }
 
     /**
-     * 返回空列表
+     * return an empty page bean
      */
-    public static <T> PageBean<T> emptyPage(Integer pageNo, Integer pageSize){
+    public static <T> PageBean<T> emptyPage(Integer pageNo, Integer pageSize) {
         return new PageBean<>(pageNo, pageSize, 0L, Collections.emptyList());
     }
 }

@@ -16,10 +16,17 @@ import java.util.UUID;
 
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
-
+/**
+ * AssistantController is a REST controller that handles requests related to the
+ * assistant.
+ * It provides an endpoint for sending messages to the assistant and receiving
+ * responses.
+ * 
+ * @author zhoumo
+ */
 @RestController
 @RequiredArgsConstructor
-@Tag(name="Assistant", description = "Assistant API")
+@Tag(name = "Assistant", description = "Assistant API")
 public class AssistantController {
 
     private final StreamingAssistant assistant;

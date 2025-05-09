@@ -27,13 +27,13 @@ import static dev.langchain4j.internal.Utils.getOrDefault;
 import static dev.langchain4j.internal.RetryUtils.withRetryMappingExceptions;
 import static java.time.Duration.ofSeconds;
 
-public class HuggingfaceEmbeddingModel implements EmbeddingModel{
+public class HuggingfaceEmbeddingModel implements EmbeddingModel {
 
     private final HttpClient httpClient;
 
     private final String baseUrl;
     private final Integer batchSize;
-    
+
     private final Boolean normalize;
     private final Boolean truncate;
 
@@ -42,13 +42,15 @@ public class HuggingfaceEmbeddingModel implements EmbeddingModel{
 
     public HuggingfaceEmbeddingModel(HuggingfaceEmbeddingModelBuilder builder) {
 
-        HttpClientBuilder httpClientBuilder =
-                        getOrDefault(builder.httpClientBuilder, HttpClientBuilderLoader::loadHttpClientBuilder);
+        HttpClientBuilder httpClientBuilder = getOrDefault(builder.httpClientBuilder,
+                HttpClientBuilderLoader::loadHttpClientBuilder);
         HttpClient httpClient = httpClientBuilder
-                    .connectTimeout(getOrDefault(getOrDefault(builder.timeout, httpClientBuilder.connectTimeout()), ofSeconds(15)))
-                    .readTimeout(getOrDefault(getOrDefault(builder.timeout, httpClientBuilder.readTimeout()), ofSeconds(60)))
-                    .build();
-        
+                .connectTimeout(
+                        getOrDefault(getOrDefault(builder.timeout, httpClientBuilder.connectTimeout()), ofSeconds(15)))
+                .readTimeout(
+                        getOrDefault(getOrDefault(builder.timeout, httpClientBuilder.readTimeout()), ofSeconds(60)))
+                .build();
+
         if (builder.logRequests || builder.logResponses) {
             this.httpClient = new LoggingHttpClient(httpClient, builder.logRequests, builder.logResponses);
         } else {
@@ -60,14 +62,13 @@ public class HuggingfaceEmbeddingModel implements EmbeddingModel{
         this.normalize = getOrDefault(builder.normalize, true);
         this.truncate = getOrDefault(builder.truncate, false);
         this.maxRetries = getOrDefault(builder.maxRetries, 3);
-        
+
         Map<String, String> defaultHeaders = new HashMap<>();
         if (builder.customHeaders != null) {
             defaultHeaders.putAll(builder.customHeaders);
         }
         this.defaultHeaders = defaultHeaders;
     }
-
 
     @Override
     public Response<List<Embedding>> embedAll(List<TextSegment> textSegments) {
@@ -120,8 +121,11 @@ public class HuggingfaceEmbeddingModel implements EmbeddingModel{
                 .body(Json.toJson(request))
                 .build();
 
-        SuccessfulHttpResponse successfulHttpResponse = withRetryMappingExceptions(() -> httpClient.execute(httpRequest), maxRetries);
-        List<List<Float>> response = Json.fromJson(successfulHttpResponse.body(), new TypeReference<List<List<Float>>>() {});
+        SuccessfulHttpResponse successfulHttpResponse = withRetryMappingExceptions(
+                () -> httpClient.execute(httpRequest), maxRetries);
+        List<List<Float>> response = Json.fromJson(successfulHttpResponse.body(),
+                new TypeReference<List<List<Float>>>() {
+                });
         List<Embedding> embeddings = response.stream().map(Embedding::from).toList();
         return Response.from(embeddings);
     }
@@ -143,7 +147,7 @@ public class HuggingfaceEmbeddingModel implements EmbeddingModel{
         private Boolean logRequests;
         private Boolean logResponses;
         private Map<String, String> customHeaders;
-        
+
         public HuggingfaceEmbeddingModelBuilder() {
             // This is public so it can be extended
         }

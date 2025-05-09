@@ -17,6 +17,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
+ * ConversationService is a service class that handles operations related to
+ * conversations.
+ * It provides methods to create, update, delete, and retrieve conversations.
+ * 
  * @author zhoumo
  */
 @Slf4j

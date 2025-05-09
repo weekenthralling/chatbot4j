@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 /**
  * GlobalExceptionHandler
  * This class is used to handle all the exceptions thrown in the application.
+ * 
  * @author zhoumo
  */
 @ControllerAdvice
@@ -18,6 +19,7 @@ public class GlobalExceptionHandler {
 
     /**
      * This method is used to handle the MethodArgumentNotValidException.
+     * 
      * @param ex MethodArgumentNotValidException
      * @return ResponseEntity<String>
      */
@@ -32,6 +34,7 @@ public class GlobalExceptionHandler {
 
     /**
      * This method is used to handle the RecordNotFoundException.
+     * 
      * @param ex RecordNotFoundException
      * @return ResponseEntity<String>
      */
@@ -42,6 +45,7 @@ public class GlobalExceptionHandler {
 
     /**
      * This method is used to handle the other Exception.
+     * 
      * @param ex Exception
      * @return ResponseEntity<String>
      */

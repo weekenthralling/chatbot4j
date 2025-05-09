@@ -10,12 +10,18 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import dev.chatbot.exception.BusinessException;
 
+/**
+ * Json
+ * This class is used to convert java objects to json and vice versa.
+ *
+ * @author zhoumo
+ */
 public class Json {
 
     private Json() {
         // Prevent instantiation
     }
-    
+
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String DATE_TIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
 
@@ -29,18 +35,19 @@ public class Json {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         // Ignore the error of empty bean to json
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        // All date formats are uniformly in the following style, i.e. yyyy-MM-dd HH:mm:ss
+        // All date formats are uniformly in the following style, i.e. yyyy-MM-dd
+        // HH:mm:ss
         mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMATTER));
-        // Ignore the case where there is a json string, but no corresponding attribute exists in the java object. Prevent errors
+        // Ignore the case where there is a json string, but no corresponding attribute
+        // exists in the java object. Prevent errors
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
-
 
     /**
      * Function description: Convert java objects into JSON data
      *
-     *@param object java object
-     *@return JSON data
+     * @param object java object
+     * @return JSON data
      */
     public static String toJson(Object object) {
         try {
@@ -53,9 +60,9 @@ public class Json {
     /**
      * Function description: Convert JSON data into java objects
      *
-     *@param json JSON data
-     *@param clazz java object class
-     *@return java object
+     * @param json  JSON data
+     * @param clazz java object class
+     * @return java object
      */
     public static <T> T fromJson(String json, Class<T> clazz) {
         try {
