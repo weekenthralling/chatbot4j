@@ -21,9 +21,9 @@ public class WeatherTool {
 
     private final Logger logger = LoggerFactory.getLogger(WeatherTool.class);
     private static final String FORECAST_API_URL =
-        "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current_weather=true";
+            "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current_weather=true";
     private static final String COORDINATES_API_URL =
-        "https://geocoding-api.open-meteo.com/v1/search?name=%s&format=json";
+            "https://geocoding-api.open-meteo.com/v1/search?name=%s&format=json";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -32,7 +32,7 @@ public class WeatherTool {
     @Tool("A tool to get the current weather of a given city.")
     @Observed
     public String weatherForecast(
-        @P("Location for forecast. Accepts **English** location names or postal codes.") String location) {
+            @P("Location for forecast. Accepts **English** location names or postal codes.") String location) {
         double[] coords = getCoordinates(location);
         if (coords == null) {
             return String.format("Sorry, I couldn't find the location for %s", location);
@@ -51,8 +51,9 @@ public class WeatherTool {
                 int weatherCode = currentWeather.get("weathercode").asInt();
                 String weatherDesc = getWeatherDescription(weatherCode);
 
-                return String.format("Current temperature: %.1f°C, Windspeed: %.1f km/h, Condition: %s", temperature,
-                    windspeed, weatherDesc);
+                return String.format(
+                        "Current temperature: %.1f°C, Windspeed: %.1f km/h, Condition: %s",
+                        temperature, windspeed, weatherDesc);
             }
         } catch (Exception e) {
             logger.warn("Error fetching weather data: {}", e.getMessage());
@@ -70,7 +71,9 @@ public class WeatherTool {
 
             if (resultsArray != null && resultsArray.isArray() && !resultsArray.isEmpty()) {
                 JsonNode node = resultsArray.get(0);
-                return new double[] {node.get("latitude").asDouble(-1.0), node.get("longitude").asDouble(-1.0)};
+                return new double[] {
+                    node.get("latitude").asDouble(-1.0), node.get("longitude").asDouble(-1.0)
+                };
             }
         } catch (Exception e) {
             logger.warn("Error fetching coordinates data: {}", e.getMessage());

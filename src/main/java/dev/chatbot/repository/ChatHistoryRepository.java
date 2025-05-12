@@ -1,10 +1,11 @@
 package dev.chatbot.repository;
 
-import dev.chatbot.domain.ChatHistory;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
+import dev.chatbot.domain.ChatHistory;
 
 /**
  * ChatHistoryRepository is a repository interface for the ChatHistory entity.
@@ -12,9 +13,8 @@ import java.util.UUID;
  * This interface is used to interact with the database and perform operations
  * related to chat history.
  * <p>
- * 
+ *
  * @author zhoumo
  */
 @Repository
-public interface ChatHistoryRepository extends JpaRepository<ChatHistory, UUID> {
-}
+public interface ChatHistoryRepository extends JpaRepository<ChatHistory, UUID> {}

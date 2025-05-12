@@ -17,8 +17,10 @@ public class HuggingfaceEmbeddingRequest {
 
     @JsonProperty
     private final List<String> inputs;
+
     @JsonProperty
     private final Boolean normalize;
+
     @JsonProperty
     private final Boolean truncate;
 }

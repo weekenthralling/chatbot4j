@@ -1,12 +1,11 @@
 package dev.chatbot.vo;
 
-import lombok.Builder;
-import lombok.Getter;
-
 import java.time.Instant;
 import java.util.List;
 
 import dev.langchain4j.data.message.ChatMessage;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder

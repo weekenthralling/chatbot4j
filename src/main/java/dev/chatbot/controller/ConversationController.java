@@ -1,19 +1,9 @@
 package dev.chatbot.controller;
 
-import dev.chatbot.domain.ChatHistory;
-import dev.chatbot.domain.Conversation;
-import dev.chatbot.dto.ConversationCreate;
-import dev.chatbot.dto.ConversationUpdate;
-import dev.chatbot.repository.ChatHistoryRepository;
-import dev.chatbot.service.ConversationService;
-import dev.chatbot.vo.Chat;
-import dev.chatbot.vo.PageBean;
-import dev.langchain4j.data.message.ChatMessage;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +19,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import dev.langchain4j.data.message.ChatMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+
+import dev.chatbot.domain.ChatHistory;
+import dev.chatbot.domain.Conversation;
+import dev.chatbot.dto.ConversationCreate;
+import dev.chatbot.dto.ConversationUpdate;
+import dev.chatbot.repository.ChatHistoryRepository;
+import dev.chatbot.service.ConversationService;
+import dev.chatbot.vo.Chat;
+import dev.chatbot.vo.PageBean;
 
 import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
 
@@ -40,7 +42,7 @@ import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJ
  * conversations.
  * It provides endpoints for creating, updating, deleting, and retrieving
  * conversations.
- * 
+ *
  * @author zhoumo
  */
 @RestController
@@ -60,11 +62,12 @@ public class ConversationController {
      */
     @PostMapping("/")
     @Operation(summary = "Create a new conversation", description = "Create a new conversation")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successful"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "201", description = "Successful"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
+                @ApiResponse(responseCode = "500", description = "Internal server error")
+            })
     public ResponseEntity<Void> createConversation(
             @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
             @Validated @RequestBody ConversationCreate conversationCreate) {
@@ -79,11 +82,12 @@ public class ConversationController {
 
     @GetMapping("/")
     @Operation(summary = "List conversations", description = "List conversations")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successful"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
+                @ApiResponse(responseCode = "500", description = "Internal server error")
+            })
     public ResponseEntity<PageBean<Chat>> listConnections(
             @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
             @RequestParam(defaultValue = "0") int page,
@@ -108,13 +112,14 @@ public class ConversationController {
 
     @PutMapping("/{convId}")
     @Operation(summary = "Update a conversation", description = "Update a conversation")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Conversation not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successful"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
+                @ApiResponse(responseCode = "403", description = "Forbidden"),
+                @ApiResponse(responseCode = "404", description = "Conversation not found"),
+                @ApiResponse(responseCode = "500", description = "Internal server error")
+            })
     public ResponseEntity<Void> updateConversation(
             @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
             @PathVariable String convId,
@@ -137,16 +142,16 @@ public class ConversationController {
 
     @GetMapping("/{convId}")
     @Operation(summary = "Get a conversation", description = "Get a conversation")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Conversation not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successful"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
+                @ApiResponse(responseCode = "403", description = "Forbidden"),
+                @ApiResponse(responseCode = "404", description = "Conversation not found"),
+                @ApiResponse(responseCode = "500", description = "Internal server error")
+            })
     public ResponseEntity<Chat> getConversation(
-            @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
-            @PathVariable String convId) {
+            @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner, @PathVariable String convId) {
         UUID conversationId = UUID.fromString(convId);
         Conversation conversation = conversationService.getConversation(conversationId);
         if (!conversation.getOwner().equals(owner)) {
@@ -169,16 +174,16 @@ public class ConversationController {
 
     @DeleteMapping("/{convId}")
     @Operation(summary = "Delete a conversation", description = "Delete a conversation")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Conversation not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successful"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
+                @ApiResponse(responseCode = "403", description = "Forbidden"),
+                @ApiResponse(responseCode = "404", description = "Conversation not found"),
+                @ApiResponse(responseCode = "500", description = "Internal server error")
+            })
     public ResponseEntity<Void> deleteConversation(
-            @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
-            @PathVariable String convId) {
+            @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner, @PathVariable String convId) {
         UUID conversationId = UUID.fromString(convId);
         Conversation chat = conversationService.getConversation(conversationId);
         if (!chat.getOwner().equals(owner)) {

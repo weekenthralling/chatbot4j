@@ -12,7 +12,7 @@ import lombok.Data;
  * application configuration file.
  * The prefix "chatbot.embed" indicates that these properties are under the
  * "chatbot.embed" section in the configuration file.
- * 
+ *
  * @author zhoumo
  */
 @Data

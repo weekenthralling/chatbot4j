@@ -1,10 +1,8 @@
 package dev.chatbot.service;
 
-import dev.chatbot.domain.Conversation;
-import dev.chatbot.exception.RecordNotFoundException;
-import dev.chatbot.repository.ConversationRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,14 +11,18 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import dev.chatbot.domain.Conversation;
+import dev.chatbot.exception.RecordNotFoundException;
+import dev.chatbot.repository.ConversationRepository;
 
 /**
  * ConversationService is a service class that handles operations related to
  * conversations.
  * It provides methods to create, update, delete, and retrieve conversations.
- * 
+ *
  * @author zhoumo
  */
 @Slf4j

@@ -9,7 +9,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import dev.chatbot.utils.Json;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.http.client.HttpClient;
@@ -22,9 +21,11 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 
+import dev.chatbot.utils.Json;
+
 import static dev.langchain4j.http.client.HttpMethod.POST;
-import static dev.langchain4j.internal.Utils.getOrDefault;
 import static dev.langchain4j.internal.RetryUtils.withRetryMappingExceptions;
+import static dev.langchain4j.internal.Utils.getOrDefault;
 import static java.time.Duration.ofSeconds;
 
 public class HuggingfaceEmbeddingModel implements EmbeddingModel {
@@ -42,8 +43,8 @@ public class HuggingfaceEmbeddingModel implements EmbeddingModel {
 
     public HuggingfaceEmbeddingModel(HuggingfaceEmbeddingModelBuilder builder) {
 
-        HttpClientBuilder httpClientBuilder = getOrDefault(builder.httpClientBuilder,
-                HttpClientBuilderLoader::loadHttpClientBuilder);
+        HttpClientBuilder httpClientBuilder =
+                getOrDefault(builder.httpClientBuilder, HttpClientBuilderLoader::loadHttpClientBuilder);
         HttpClient httpClient = httpClientBuilder
                 .connectTimeout(
                         getOrDefault(getOrDefault(builder.timeout, httpClientBuilder.connectTimeout()), ofSeconds(15)))
@@ -121,11 +122,10 @@ public class HuggingfaceEmbeddingModel implements EmbeddingModel {
                 .body(Json.toJson(request))
                 .build();
 
-        SuccessfulHttpResponse successfulHttpResponse = withRetryMappingExceptions(
-                () -> httpClient.execute(httpRequest), maxRetries);
-        List<List<Float>> response = Json.fromJson(successfulHttpResponse.body(),
-                new TypeReference<List<List<Float>>>() {
-                });
+        SuccessfulHttpResponse successfulHttpResponse =
+                withRetryMappingExceptions(() -> httpClient.execute(httpRequest), maxRetries);
+        List<List<Float>> response =
+                Json.fromJson(successfulHttpResponse.body(), new TypeReference<List<List<Float>>>() {});
         List<Embedding> embeddings = response.stream().map(Embedding::from).toList();
         return Response.from(embeddings);
     }

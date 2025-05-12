@@ -1,6 +1,17 @@
 package dev.chatbot.domain;
 
+import java.time.Instant;
+import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,27 +21,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.Instant;
-import java.util.UUID;
 
 /**
  * ChatHistory is a domain class that represents the chat history of a
  * conversation.
- * 
+ *
  * @author zhoumo
  */
 @Getter
 @Setter
 @ToString
 @Entity
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @SQLDelete(sql = "UPDATE chat_history SET archived = true WHERE id = ?")
 @SQLRestriction("archived = false")
 @Builder

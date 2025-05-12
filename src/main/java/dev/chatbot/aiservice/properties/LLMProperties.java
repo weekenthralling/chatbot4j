@@ -1,8 +1,9 @@
 package dev.chatbot.aiservice.properties;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import lombok.Data;
 
 /**
  * LLMProperties is a configuration class that holds properties related to the
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * application configuration file.
  * The prefix "llm" indicates that these properties are under the "llm" section
  * in the configuration file.
- * 
+ *
  * @author zhoumo
  */
 @Data
