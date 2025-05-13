@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.chatbot</groupId>
@@ -12,7 +12,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.5</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <properties>
@@ -77,7 +77,7 @@
                 <!--Exclude JUnit 4 dependencies -->
                 <exclusion>
                     <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId> 
+                    <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -129,18 +129,29 @@
             <version>${langchain4j.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-community-redis</artifactId>
+            <version>${langchain4j.version}</version>
+        </dependency>
+
         <!-- for Flux<String> support -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-reactor</artifactId>
             <version>${langchain4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <!-- LangChain4j Dependencies End-->
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.11</version>
+        </dependency>
     </dependencies>
 
     <!--Build Settings -->
@@ -159,14 +170,15 @@
                             <include>src/test/java/**/*.java</include>
                         </includes>
                         <!-- Cleanthat will refactor your code, but it may break your style: apply it before your formatter -->
-                        <cleanthat /> <!-- has its own section below -->
+                        <cleanthat/> <!-- has its own section below -->
                         <palantirJavaFormat>
                             <version>2.39.0</version> <!-- optional -->
                             <style>PALANTIR</style> <!-- or AOSP/GOOGLE (optional) -->
-                            <formatJavadoc>false</formatJavadoc> <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
+                            <formatJavadoc>false
+                            </formatJavadoc> <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
                         </palantirJavaFormat>
-                        <removeUnusedImports /> <!-- self-explanatory -->
-                        <formatAnnotations />  <!-- fixes formatting of type annotations, see below -->
+                        <removeUnusedImports/> <!-- self-explanatory -->
+                        <formatAnnotations/>  <!-- fixes formatting of type annotations, see below -->
                         <importOrder>
                             <wildcardsLast>true</wildcardsLast>
                             <order>java|javax,org,com,,dev.chatbot,\#,\#dev.chatbot,</order>

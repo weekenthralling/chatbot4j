@@ -51,6 +51,11 @@ logging:
 
 # chatbot model config
 chatbot:
+  datasets:
+    base-dir: ${DATASETS_BASE:/data} # Dataset base directory
+    sync-policy: ${DATASETS_SYNC_POLICY:NEVER} # Synchronize datasets
+  embedding:
+    base-url: ${EMBEDDING_BASE_URL:https://api.openai.com} # Base URL for embedding service
   llm:
     base-url: ${LLM_BASE_URL:https://api.openai.com/v1/} # Base URL for LLM service
     model-name: ${LLM_MODEL:gpt-4o-mini} # LLM model name
@@ -58,5 +63,3 @@ chatbot:
     temperature: 0.8
     top-p: 0.9
     max-tokens: 512
-  embedding:
-    base-url: ${EMBEDDING_BASE_URL:https://api.openai.com} # Base URL for embedding service
