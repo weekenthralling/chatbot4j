@@ -35,6 +35,9 @@ public class WebSearchTool {
         if (results.results().isEmpty()) {
             return "No results found.";
         }
+        if (results.results().get(0).title().equals("Tavily Search API")) {
+            return results.results().get(0).snippet();
+        }
         List<String> result =
                 results.results().stream().map(WebSearchOrganicResult::snippet).toList();
 
