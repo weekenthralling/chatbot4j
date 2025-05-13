@@ -1,12 +1,13 @@
 package dev.chatbot.aiservice;
 
-import java.util.List;
-
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-
+import dev.chatbot.aiservice.embeddings.HuggingfaceEmbeddingModel;
+import dev.chatbot.aiservice.properties.EmbedProperties;
+import dev.chatbot.aiservice.properties.LLMProperties;
+import dev.chatbot.aiservice.properties.TavilyProperties;
+import dev.chatbot.aiservice.tools.DatetimeTool;
+import dev.chatbot.aiservice.tools.JobSearchTool;
+import dev.chatbot.aiservice.tools.WeatherTool;
+import dev.chatbot.aiservice.tools.WebSearchTool;
 import dev.langchain4j.community.store.embedding.redis.RedisEmbeddingStore;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
@@ -15,32 +16,42 @@ import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.web.search.WebSearchEngine;
+import dev.langchain4j.web.search.tavily.TavilyWebSearchEngine;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
-import dev.chatbot.aiservice.embeddings.HuggingfaceEmbeddingModel;
-import dev.chatbot.aiservice.properties.EmbedProperties;
-import dev.chatbot.aiservice.properties.LLMProperties;
-import dev.chatbot.aiservice.tools.DatetimeTool;
-import dev.chatbot.aiservice.tools.JobSearchTool;
-import dev.chatbot.aiservice.tools.WeatherTool;
+import java.util.List;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
-/**
- * Configuration class for the Assistant service. This class defines the beans required for the
- * Assistant service, including the embedding model, chat model, and chat memory provider.
- *
- * @author zhoumo
- */
 @Configuration
 @RequiredArgsConstructor
 public class AssistantConfiguration {
 
     private final EmbedProperties embedProperties;
     private final LLMProperties llmProperties;
+    private final TavilyProperties tavilyProperties;
     private final PersistentChatMemoryStore chatMemoryStore;
     private final List<ChatModelListener> listeners;
     private final RedisProperties redisProperties;
+
+    @Bean
+    WebSearchEngine webSearchEngine() {
+        TavilyWebSearchEngine.TavilyWebSearchEngineBuilder builder = TavilyWebSearchEngine.builder()
+                .baseUrl(tavilyProperties.getBaseUrl())
+                .apiKey(tavilyProperties.getApiKey())
+                .searchDepth(tavilyProperties.getSearchDepth())
+                .includeDomains(tavilyProperties.getIncludeDomains())
+                .excludeDomains(tavilyProperties.getExcludeDomains())
+                .includeAnswer(tavilyProperties.getIncludeAnswer())
+                .includeRawContent(tavilyProperties.getIncludeRawContent())
+                .timeout(tavilyProperties.getTimeout());
+        return builder.build();
+    }
 
     @Bean
     EmbeddingModel embeddingModel() {
@@ -91,8 +102,13 @@ public class AssistantConfiguration {
     }
 
     @Bean
-    public List<Object> toolkit(EmbeddingModel embeddingModel, RedisEmbeddingStore embeddingStore) {
-        return List.of(new WeatherTool(), new DatetimeTool(), new JobSearchTool(embeddingModel, embeddingStore));
+    public List<Object> toolkit(
+            EmbeddingModel embeddingModel, RedisEmbeddingStore embeddingStore, WebSearchEngine webSearchEngine) {
+        return List.of(
+                new WeatherTool(),
+                new DatetimeTool(),
+                new JobSearchTool(embeddingModel, embeddingStore),
+                new WebSearchTool(webSearchEngine));
     }
 
     @Bean
@@ -101,8 +117,8 @@ public class AssistantConfiguration {
             StreamingChatModel model, ChatMemoryProvider chatMemoryProvider, List<Object> toolkit) {
         return AiServices.builder(StreamingAssistant.class)
                 .streamingChatModel(model)
-                .chatMemoryProvider(chatMemoryProvider)
                 .tools(toolkit)
+                .chatMemoryProvider(chatMemoryProvider)
                 .build();
     }
 }
