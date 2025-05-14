@@ -20,7 +20,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springdoc.version>2.8.8</springdoc.version>
-        <langchain4j.version>1.0.0-beta4</langchain4j.version>
+        <langchain4j.version>1.0.0-beta5</langchain4j.version>
         <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     </properties>
