@@ -21,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class WebSearchTool {
 
+    public static final String ANSWER = "Tavily Search API";
     private WebSearchEngine searchEngine;
 
     @Tool("Useful for when you need to search the Internet.")
@@ -35,7 +36,7 @@ public class WebSearchTool {
         if (results.results().isEmpty()) {
             return "No results found.";
         }
-        if (results.results().get(0).title().equals("Tavily Search API")) {
+        if (results.results().get(0).title().equals(ANSWER)) {
             return results.results().get(0).snippet();
         }
         List<String> result =
@@ -44,6 +45,7 @@ public class WebSearchTool {
         return "The following content was found:\n " + Strings.join(result, '\n');
     }
 
+    // I'm not sure if this is helpful.
     public String search(String q) {
         return search(q, 5);
     }
