@@ -1,13 +1,12 @@
 package dev.chatbot.aiservice;
 
-import dev.chatbot.aiservice.embeddings.HuggingfaceEmbeddingModel;
-import dev.chatbot.aiservice.properties.EmbedProperties;
-import dev.chatbot.aiservice.properties.LLMProperties;
-import dev.chatbot.aiservice.properties.TavilyProperties;
-import dev.chatbot.aiservice.tools.DatetimeTool;
-import dev.chatbot.aiservice.tools.JobSearchTool;
-import dev.chatbot.aiservice.tools.WeatherTool;
-import dev.chatbot.aiservice.tools.WebSearchTool;
+import java.util.List;
+
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
 import dev.langchain4j.community.store.embedding.redis.RedisEmbeddingStore;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
@@ -19,12 +18,15 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.web.search.WebSearchEngine;
 import dev.langchain4j.web.search.tavily.TavilyWebSearchEngine;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
-import java.util.List;
+import dev.chatbot.aiservice.embeddings.HuggingfaceEmbeddingModel;
+import dev.chatbot.aiservice.properties.EmbedProperties;
+import dev.chatbot.aiservice.properties.LLMProperties;
+import dev.chatbot.aiservice.properties.TavilyProperties;
+import dev.chatbot.aiservice.tools.DatetimeTool;
+import dev.chatbot.aiservice.tools.JobSearchTool;
+import dev.chatbot.aiservice.tools.WeatherTool;
+import dev.chatbot.aiservice.tools.WebSearchTool;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 

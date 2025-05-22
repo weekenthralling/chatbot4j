@@ -1,5 +1,9 @@
 package dev.chatbot.aiservice.tools;
 
+import java.util.List;
+
+import org.apache.logging.log4j.util.Strings;
+
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.web.search.WebSearchEngine;
@@ -8,9 +12,6 @@ import dev.langchain4j.web.search.WebSearchRequest;
 import dev.langchain4j.web.search.WebSearchResults;
 import io.micrometer.observation.annotation.Observed;
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
-
-import java.util.List;
 
 /**
  *  <br>
