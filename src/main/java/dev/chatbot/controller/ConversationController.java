@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.langchain4j.data.message.ChatMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,6 +32,7 @@ import dev.chatbot.dto.ConversationUpdate;
 import dev.chatbot.repository.ChatHistoryRepository;
 import dev.chatbot.service.ConversationService;
 import dev.chatbot.vo.Chat;
+import dev.chatbot.vo.Message;
 import dev.chatbot.vo.PageBean;
 
 import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
@@ -68,7 +68,7 @@ public class ConversationController {
                 @ApiResponse(responseCode = "400", description = "Bad request"),
                 @ApiResponse(responseCode = "500", description = "Internal server error")
             })
-    public ResponseEntity<Void> createConversation(
+    public ResponseEntity<Chat> createConversation(
             @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
             @Validated @RequestBody ConversationCreate conversationCreate) {
         Conversation conversation = Conversation.builder()
@@ -77,7 +77,14 @@ public class ConversationController {
                 .ragEnabled(conversationCreate.isRagEnabled())
                 .build();
         conversationService.saveConversation(conversation);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Chat chat = Chat.builder()
+                .id(conversation.getId().toString())
+                .title(conversation.getTitle())
+                .owner(conversation.getOwner())
+                .updatedAt(conversation.getUpdatedAt())
+                .build();
+
+        return new ResponseEntity<>(chat, HttpStatus.CREATED);
     }
 
     @GetMapping("/")
@@ -157,10 +164,18 @@ public class ConversationController {
         if (!conversation.getOwner().equals(owner)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        List<ChatMessage> messages = List.of();
+        List<Message> messages = List.of();
         ChatHistory history = chatHistoryRepository.findById(conversationId).orElse(null);
         if (Objects.nonNull(history)) {
-            messages = messagesFromJson(history.getMessage());
+            messages = messagesFromJson(history.getMessage()).stream()
+                    .map(message -> {
+                        try {
+                            return Message.fromChatMessage(message);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .toList();
         }
         Chat chat = Chat.builder()
                 .id(conversation.getId().toString())

@@ -1,11 +1,12 @@
 package dev.chatbot.aiservice.properties;
 
-import lombok.Data;
+import java.time.Duration;
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.util.List;
+import lombok.Data;
 
 /**
  *  <br>

@@ -3,7 +3,6 @@ package dev.chatbot.vo;
 import java.time.Instant;
 import java.util.List;
 
-import dev.langchain4j.data.message.ChatMessage;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -34,5 +33,5 @@ public class Chat {
     /**
      * messages of the conversation
      */
-    private List<ChatMessage> messages;
+    private List<Message> messages;
 }
