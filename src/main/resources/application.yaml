@@ -63,6 +63,5 @@ chatbot:
     temperature: 0.8
     top-p: 0.9
     max-tokens: 512
-
-tavily:
-  api-key: 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
+  tavily:
+    api-key: ${TAVILY_API_KEY:demo} # Tavily API key, used for web search

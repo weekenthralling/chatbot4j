@@ -16,7 +16,7 @@ import lombok.Data;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "tavily")
+@ConfigurationProperties(prefix = "chatbot.tavily")
 public class TavilyProperties {
     private String baseUrl = "https://api.tavily.com";
     private String apiKey;
