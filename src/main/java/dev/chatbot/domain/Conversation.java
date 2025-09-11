@@ -58,14 +58,8 @@ public class Conversation {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String owner;
 
-    @Column(name = "title_generated", columnDefinition = "BOOLEAN default 'false'")
-    private Boolean titleGenerated;
-
     @Column(columnDefinition = "BOOLEAN default 'false'")
     private Boolean pinned;
-
-    @Column(name = "rag_enabled", columnDefinition = "BOOLEAN default 'false'")
-    private Boolean ragEnabled;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

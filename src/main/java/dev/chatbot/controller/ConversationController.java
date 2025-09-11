@@ -74,7 +74,6 @@ public class ConversationController {
         Conversation conversation = Conversation.builder()
                 .title(conversationCreate.getTitle())
                 .owner(owner)
-                .ragEnabled(conversationCreate.isRagEnabled())
                 .build();
         conversationService.saveConversation(conversation);
         Chat chat = Chat.builder()
@@ -139,9 +138,6 @@ public class ConversationController {
         conversation.setTitle(conversationUpdate.getTitle());
         if (conversationUpdate.isPinned()) {
             conversation.setPinned(true);
-        }
-        if (conversationUpdate.isRagEnabled()) {
-            conversation.setRagEnabled(true);
         }
         conversationService.saveConversation(conversation);
         return new ResponseEntity<>(HttpStatus.OK);
