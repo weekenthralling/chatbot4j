@@ -97,7 +97,7 @@ public class ConversationController {
     public ResponseEntity<PageBean<Chat>> listConnections(
             @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String owner,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(name = "pageSize", defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         Page<Conversation> listed = conversationService.listConversationsByOwner(owner, page, size);
         if (listed.getContent().isEmpty()) {
             new ResponseEntity<>(PageBean.emptyPage(page, size), HttpStatus.OK);
