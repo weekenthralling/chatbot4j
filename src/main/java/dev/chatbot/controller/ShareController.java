@@ -36,7 +36,7 @@ public class ShareController {
 
     private final ShareService shareService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "Share a conversation", description = "Share a conversation")
     @ApiResponses(
             value = {

@@ -46,7 +46,7 @@ import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJ
  * @author zhoumo
  */
 @RestController
-@RequestMapping("/conversation")
+@RequestMapping("/conversations")
 @RequiredArgsConstructor
 @Tag(name = "Conversation", description = "Conversation API")
 public class ConversationController {
@@ -60,7 +60,7 @@ public class ConversationController {
      * @param conversationCreate ConversationDTO
      * @return ResponseEntity<Void>
      */
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "Create a new conversation", description = "Create a new conversation")
     @ApiResponses(
             value = {
@@ -86,7 +86,7 @@ public class ConversationController {
         return new ResponseEntity<>(chat, HttpStatus.CREATED);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "List conversations", description = "List conversations")
     @ApiResponses(
             value = {
