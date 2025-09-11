@@ -23,12 +23,13 @@ public class PageBean<T> {
     /**
      * page number
      */
-    @JsonProperty("current")
+    @JsonProperty("page")
     private Integer pageNo;
 
     /**
      * page size
      */
+    @JsonProperty("size")
     private Integer pageSize;
 
     /**
@@ -39,6 +40,7 @@ public class PageBean<T> {
     /**
      * items for the current page
      */
+    @JsonProperty("items")
     private List<T> list;
 
     public PageBean(Integer pageNo, Integer pageSize, Long total, List<T> list) {
