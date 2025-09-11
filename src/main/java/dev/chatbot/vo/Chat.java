@@ -26,6 +26,11 @@ public class Chat {
     private String owner;
 
     /**
+     * Pin status of the conversation
+     */
+    private boolean pinned;
+
+    /**
      * The conversation update time
      */
     private Instant updatedAt;

@@ -109,6 +109,7 @@ public class ConversationController {
                         .title(conversation.getTitle())
                         .updatedAt(conversation.getUpdatedAt())
                         .owner(conversation.getOwner())
+                        .pinned(conversation.getPinned())
                         .build())
                 .toList();
 
