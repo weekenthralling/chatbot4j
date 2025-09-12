@@ -172,6 +172,10 @@ public class ConversationController {
                             throw new RuntimeException(e);
                         }
                     })
+                    // filter out system messages and messages with null content
+                    .filter(Objects::nonNull)
+                    .filter(message -> Objects.nonNull(message.getContent()))
+                    .filter(message -> !"system".equals(message.getRole()))
                     .toList();
         }
         Chat chat = Chat.builder()
