@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.AudioContent;
 import dev.langchain4j.data.message.ChatMessage;
@@ -42,6 +44,7 @@ public class Message {
     /**
      * The role of the sender (user or ai)
      */
+    @JsonProperty("type")
     private String role;
 
     /**
@@ -95,7 +98,7 @@ public class Message {
                 return Message.builder()
                         .content(text)
                         .metadata(metadata)
-                        .role("user")
+                        .role("human")
                         .build();
             }
             case TOOL_EXECUTION_RESULT -> {
