@@ -27,12 +27,12 @@ import lombok.RequiredArgsConstructor;
 
 import dev.chatbot.domain.ChatHistory;
 import dev.chatbot.domain.Conversation;
+import dev.chatbot.dto.ChatMessage;
 import dev.chatbot.dto.ConversationCreate;
 import dev.chatbot.dto.ConversationUpdate;
 import dev.chatbot.repository.ChatHistoryRepository;
 import dev.chatbot.service.ConversationService;
 import dev.chatbot.vo.Chat;
-import dev.chatbot.vo.Message;
 import dev.chatbot.vo.PageBean;
 
 import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
@@ -161,21 +161,17 @@ public class ConversationController {
         if (!conversation.getOwner().equals(owner)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        List<Message> messages = List.of();
+
+        // Retrieve chat histories for the conversation and convert them to messages
+        List<ChatMessage> messages = List.of();
         ChatHistory history = chatHistoryRepository.findById(conversationId).orElse(null);
         if (Objects.nonNull(history)) {
             messages = messagesFromJson(history.getMessage()).stream()
-                    .map(message -> {
-                        try {
-                            return Message.fromChatMessage(message);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
+                    .map(ChatMessage::fromLC)
                     // filter out system messages and messages with null content
                     .filter(Objects::nonNull)
                     .filter(message -> Objects.nonNull(message.getContent()))
-                    .filter(message -> !"system".equals(message.getRole()))
+                    .filter(message -> !"system".equals(message.getType()))
                     .toList();
         }
         Chat chat = Chat.builder()

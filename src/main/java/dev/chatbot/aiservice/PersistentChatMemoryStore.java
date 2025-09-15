@@ -64,7 +64,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
                         Map<String, Object> attributes = customMessage.attributes();
                         String type = (String) attributes.get("type");
                         log.debug("Convert CustomMessage type: {}", type);
-                        if ("user".equals(type)) {
+                        if ("human".equals(type)) {
                             // Convert CustomMessage to UserMessage
                             // TODO: only single text for now.
                             message = UserMessage.from((String) attributes.get("content"));
@@ -107,7 +107,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
                         "id", UUID.randomUUID().toString(),
                         "content", userMessage.singleText(),
                         "contents", userMessage.contents(),
-                        "type", "user",
+                        "type", "human",
                         "sendAt", Instant.now().toEpochMilli());
                 lastMessage = CustomMessage.from(attributes);
                 break;
@@ -118,7 +118,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
                         .filter(msg -> msg.type() == ChatMessageType.CUSTOM)
                         .map(msg -> (CustomMessage) msg)
                         .filter(customMsg ->
-                                "user".equals(customMsg.attributes().get("type")))
+                                "human".equals(customMsg.attributes().get("type")))
                         .reduce((first, second) -> second)
                         .map(customMsg -> (String) customMsg.attributes().get("id"))
                         .orElse(null);
@@ -141,7 +141,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
                         .filter(msg -> msg.type() == ChatMessageType.CUSTOM)
                         .map(msg -> (CustomMessage) msg)
                         .filter(customMsg ->
-                                "user".equals(customMsg.attributes().get("type")))
+                                "human".equals(customMsg.attributes().get("type")))
                         .reduce((first, second) -> second)
                         .map(customMsg -> (String) customMsg.attributes().get("id"))
                         .orElse(null);
