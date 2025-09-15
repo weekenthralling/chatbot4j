@@ -6,6 +6,8 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
+import dev.chatbot.dto.ChatMessage;
+
 @Getter
 @Builder
 public class Chat {
@@ -38,5 +40,5 @@ public class Chat {
     /**
      * messages of the conversation
      */
-    private List<Message> messages;
+    private List<ChatMessage> messages;
 }

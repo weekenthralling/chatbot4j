@@ -2,6 +2,7 @@ package dev.chatbot.controller;
 
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 
 import dev.chatbot.aiservice.StreamingAssistant;
-import dev.chatbot.dto.AssistantMessage;
+import dev.chatbot.dto.ChatMessage;
 
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
@@ -33,7 +34,7 @@ public class AssistantController {
 
     private final StreamingAssistant assistant;
 
-    @PostMapping(value = "/assistant", produces = TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/{conversationId}/assistant", produces = TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "Assistant API", description = "Get assistant response")
     @ApiResponses(
             value = {
@@ -41,8 +42,9 @@ public class AssistantController {
                 @ApiResponse(responseCode = "400", description = "Bad request"),
                 @ApiResponse(responseCode = "500", description = "Internal server error")
             })
-    public Flux<String> assistant(@RequestBody AssistantMessage message) {
-        UUID sessionId = UUID.fromString(message.getSessionId());
-        return assistant.chat(sessionId, message.getMessage());
+    public Flux<String> assistant(@PathVariable String conversationId, @RequestBody ChatMessage message) {
+        // Use conversation id as the session id for the conversation
+        UUID sessionId = UUID.fromString(conversationId);
+        return this.assistant.chat(sessionId, message.getContent());
     }
 }
