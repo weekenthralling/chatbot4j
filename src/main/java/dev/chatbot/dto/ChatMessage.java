@@ -1,5 +1,6 @@
 package dev.chatbot.dto;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class ChatMessage {
      * Note: This field may be unused now.
      */
     @JsonProperty("send_at")
-    private String sendAt;
+    private Instant sendAt;
 
     /**
      * The type of the message, e.g., "human", "ai", etc.
@@ -98,7 +99,7 @@ public class ChatMessage {
                         .type("ai")
                         .id(attributes.get("id").toString())
                         .parentId(attributes.get("parentId").toString())
-                        .sendAt(attributes.get("sendAt").toString())
+                        .sendAt(Instant.ofEpochMilli((long) attributes.get("sendAt")))
                         .additionalKwargs(Map.of("tool_calls", tools))
                         .build();
             }
@@ -111,7 +112,7 @@ public class ChatMessage {
                         .id(attributes.get("id").toString())
                         // User message may not have parentId
                         .parentId(attributes.getOrDefault("parentId", "").toString())
-                        .sendAt(attributes.get("sendAt").toString())
+                        .sendAt(Instant.ofEpochMilli((long) attributes.get("sendAt")))
                         .additionalKwargs(customMessage.attributes())
                         .build();
             }
