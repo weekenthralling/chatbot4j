@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-send</title>
+    <defs>
+        <linearGradient x1="4.96406941%" y1="0%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#D8FF7D" offset="0%"></stop>
+            <stop stop-color="#7DD6FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2.1.1-会话" transform="translate(-1123, -732)">
+            <g id="icon-send" transform="translate(1123, 732)">
+                <rect id="矩形" fill="url(#linearGradient-1)" x="0" y="0" width="32" height="32" rx="6"></rect>
+                <g id="编组" transform="translate(4, 4)" fill="#FFFFFF" stroke="#303133">
+                    <path d="M18.1771619,4.55198102 C18.4404531,4.4642215 18.7143919,4.49148447 18.9444489,4.60650742 C19.174497,4.72152598 19.3606675,4.92429906 19.4484281,5.1875684 C19.5051693,5.35778385 19.5150904,5.53939609 19.4781876,5.71359648 L14.7851061,19.8124316 C14.6973454,20.0757009 14.511175,20.278474 14.2811269,20.3934926 C14.0510699,20.5085155 13.7771311,20.5357785 13.5138399,20.448019 L9.7160874,16.8004945 L13.4912825,10.5088049 L7.19929069,14.2838187 L3.79435417,10.8790457 C3.59811943,10.6828204 3.5,10.4256362 3.5,10.168451 C3.5,9.91126577 3.59811943,9.65408159 3.79435417,9.45785628 Z" id="三角形"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
