@@ -1,5 +1,6 @@
 package dev.chatbot.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -168,10 +169,11 @@ public class ConversationController {
         if (Objects.nonNull(history)) {
             messages = messagesFromJson(history.getMessage()).stream()
                     .map(ChatMessage::fromLC)
-                    // filter out system messages and messages with null content
                     .filter(Objects::nonNull)
                     .filter(message -> Objects.nonNull(message.getContent()))
-                    .filter(message -> !"system".equals(message.getType()))
+                    // TODO: chatbot only stream "human" and "ai" message now, so we just show these two types
+                    // here. In the future, we may need to show other types of messages.
+                    .filter(message -> Arrays.asList("human", "ai").contains(message.getType()))
                     .toList();
         }
         Chat chat = Chat.builder()
