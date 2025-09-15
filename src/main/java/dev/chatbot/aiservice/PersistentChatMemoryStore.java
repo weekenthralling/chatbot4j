@@ -53,7 +53,7 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
         }
         /**
          * We use the `CustomMessage` class to represent user messages and tool execution results messages.
-         * We have store additional metadata about the messages, such as their IDs and timestamps.
+         * We store additional metadata about the messages, such as their IDs and timestamps.
          * We should convert them to real UserMessage and ToolExecutionResultMessage objects when request for ChatModel.
          */
         List<ChatMessage> chatMessages = messagesFromJson(chatHistory.get().getMessage());
