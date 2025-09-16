@@ -121,6 +121,9 @@ const Chatbox = () => {
       const decoder = new TextDecoder();
       let buffer = "";
 
+      // Unique ID for this message stream
+      const run_id = `run--${crypto.randomUUID()}`;
+
       try {
         while (true) {
           const { done, value } = await reader.read();
@@ -139,7 +142,7 @@ const Chatbox = () => {
 
           for (const line of lines) {
             if (line.startsWith("data:")) {
-              const data = line.slice(6); // Remove 'data: ' prefix
+              const data = line.slice(5); // Remove 'data:' prefix
 
               if (!data.trim()) continue;
 
@@ -151,7 +154,18 @@ const Chatbox = () => {
               }
 
               try {
-                const message = JSON.parse(data);
+                // TODO: ChatBot only sends content via stream, so need to construct message object here.
+                // We may want to change this in the future to send full message objects.
+                const message = {
+                  content: data,
+                  type: "AIMessageChunk",
+                  parent_id: messageData.id,
+                  from: "ai",
+                  id: run_id,
+                  sent_at: new Date().toISOString(),
+                  attachments: [],
+                  additional_kwargs: { model: checkedModel?.name, run_id },
+                }
                 handleMessageEvent(message);
               } catch (parseError) {
                 console.warn("Failed to parse SSE message:", data, parseError);
