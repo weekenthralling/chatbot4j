@@ -25,7 +25,7 @@ const MyShares = ({
 
   useEffect(() => {
     if (open) {
-      getSharesOnServer({ page: 1, size: 100 }).then((shares) => {
+      getSharesOnServer({ page: 0, size: 100 }).then((shares) => {
         setSharePage(shares);
       });
     }
