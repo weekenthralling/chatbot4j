@@ -34,7 +34,7 @@ export async function loader({ params }: any): Promise<ConversationDTO> {
         // Return minimal conversation object - the real messages will come from the SSE response
         return {
           id,
-          title: "新对话",
+          title: "New Chat",
           messages: [],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),

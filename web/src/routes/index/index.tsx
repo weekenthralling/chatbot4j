@@ -29,7 +29,7 @@ const Index = () => {
   const handleSend = throttle(async (message) => {
     setLoading(true);
     try {
-      const newConv = await createConvOnServer({ title: "新对话" });
+      const newConv = await createConvOnServer({ title: "New Chat" });
       const toSend: HumanMessageDTO = {
         ...message,
         additional_kwargs: {
