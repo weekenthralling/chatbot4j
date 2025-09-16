@@ -2,6 +2,8 @@ package dev.chatbot.repository;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +19,21 @@ import dev.chatbot.domain.Share;
  * @author zhoumo
  */
 @Repository
-public interface ShareRepository extends JpaRepository<Share, UUID> {}
+public interface ShareRepository extends JpaRepository<Share, UUID> {
+    /**
+     * delete a share by id and owner
+     *
+     * @param id share id
+     * @param owner share owner
+     */
+    void deleteByIdAndOwner(UUID id, String owner);
+
+    /**
+     * list shares by owner with pagination
+     *
+     * @param owner share owner
+     * @param pageable pagination info
+     * @return
+     */
+    Page<Share> findByOwner(String owner, Pageable pageable);
+}
