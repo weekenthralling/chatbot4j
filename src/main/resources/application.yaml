@@ -7,9 +7,6 @@ springdoc:
     enabled: true
 
 spring:
-  mvc:
-    servlet:
-      path: /api # Set context path for MVC
   application:
     name: chatbot4j # Application name
   datasource:
