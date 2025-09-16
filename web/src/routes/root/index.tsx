@@ -95,9 +95,7 @@ function Root() {
     <div
       className={`flex w-screen h-screen flex-col ${isMobileEnv ? "p-0" : "p-2"}`}
       style={{
-        background: !convId ? `url("${BgImage}")` : "#F6F6F6",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
+        background: !convId ? `url("${BgImage}") center/cover no-repeat` : "#F6F6F6",
       }}
     >
       {isMobileEnv && <MobileHeader />}
