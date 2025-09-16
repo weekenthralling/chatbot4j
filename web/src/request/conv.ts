@@ -78,27 +78,19 @@ export const deleteConvOnServer = async (id: string): Promise<void> => {
 };
 
 export const feedbackToServer = async (conv_id: string, run_id: string, payload: FeedbackDTO) => {
-    const resp = await fetch(`/api/conversations/${conv_id}/runs/${run_id}/feedback`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-    });
-    if (!resp.ok) {
-        throw new Error("Error feedback");
-    }
+    // TODO: implement feedback API
+    return Promise.resolve();
+    // const resp = await fetch(`/api/conversations/${conv_id}/runs/${run_id}/feedback`, {
+    //     method: "PUT",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(payload),
+    // });
+    // if (!resp.ok) {
+    //     throw new Error("Error feedback");
+    // }
 }
-
-
-export const interruptChat = async (convId: string) => {
-    const resp = await fetch(`/api/conversations/${convId}/chat/interrupt`, {
-        method: "POST",
-    });
-    if (!resp.ok) {
-        throw new Error("Error interrupting")
-    }
-};
 
 /**
  * Upload files to conversation
