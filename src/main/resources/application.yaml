@@ -1,8 +1,3 @@
-server:
-  port: 8080 # Service running port
-  servlet:
-    context-path: /api # Set context path
-
 springdoc:
   api-docs:
     path: /api-docs
@@ -12,6 +7,9 @@ springdoc:
     enabled: true
 
 spring:
+  mvc:
+    servlet:
+      path: /api # Set context path for MVC
   application:
     name: chatbot4j # Application name
   datasource:

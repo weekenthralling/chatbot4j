@@ -1,5 +1,7 @@
 package dev.chatbot.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -12,7 +14,13 @@ import lombok.Data;
 public class ConversationShare {
 
     /**
+     * share title
+     */
+    private String title;
+
+    /**
      * conversation session id
      */
-    @NotEmpty private String sessionId;
+    @NotEmpty @JsonProperty("source_id")
+    private String sessionId;
 }

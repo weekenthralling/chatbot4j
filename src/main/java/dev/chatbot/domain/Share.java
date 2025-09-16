@@ -10,8 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
@@ -42,7 +40,6 @@ import lombok.ToString;
 public class Share {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id; // UUID primary key
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -54,8 +51,8 @@ public class Share {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
 
-    @Column(nullable = false, columnDefinition = "JSONB")
-    private String snapshotRef; // This can be a JSON string or use a separate entity
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String snapshotRef;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
