@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import dev.chatbot.dto.UserInfo;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @Tag(name = "User", description = "User API")
 public class UserController {
 

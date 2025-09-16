@@ -42,7 +42,7 @@ import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJ
  * @author zhoumo
  */
 @RestController
-@RequestMapping("/shares")
+@RequestMapping("/api/shares")
 @RequiredArgsConstructor
 @Tag(name = "Share", description = "Share API")
 public class ShareController {

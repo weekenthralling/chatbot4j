@@ -47,7 +47,7 @@ import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJ
  * @author zhoumo
  */
 @RestController
-@RequestMapping("/conversations")
+@RequestMapping("/api/conversations")
 @RequiredArgsConstructor
 @Tag(name = "Conversation", description = "Conversation API")
 public class ConversationController {
