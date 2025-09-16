@@ -35,6 +35,9 @@ const MyShares = ({
     try {
       await deleteShareOnServer(id);
       messageApi.success("删除成功");
+      getSharesOnServer({ page: 0, size: 100 }).then((shares) => {
+        setSharePage(shares);
+      });
     } catch {
       messageApi.error("删除失败");
     }
