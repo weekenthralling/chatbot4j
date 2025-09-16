@@ -22,16 +22,12 @@ import { Avatar, Popover } from "antd";
 import { useUserStore } from "@/store/userStore";
 import MyShares from "@/components/MyShares";
 import CollapsedMenu from "@/routes/root/LeftPanel/components/CollapsedMenu";
-import { isMobile } from "@/utils/utils";
 
 const LeftPanel = () => {
-  const isMobileEnv = useMemo(() => {
-    return isMobile();
-  }, []);
   const navigate = useNavigate();
   const userInfo = useUserStore((state) => state.userInfo);
   const { id: convId } = useParams();
-  const [collapsed, setCollapsed] = useState(isMobileEnv);
+  const [collapsed, setCollapsed] = useState(false);
   const [showMyShare, setShowMyShare] = useState(false);
 
   const convs = useConvsStore((state) => state.convs);
@@ -131,76 +127,46 @@ const LeftPanel = () => {
   };
 
   useEffect(() => {
-    if (isMobileEnv) {
-      setCollapsed(true);
-    }
+    setCollapsed(false);
   }, [convId]);
   return (
     <>
-      {isMobileEnv && !collapsed ? (
-        <div
-          className="absolute w-screen h-full bg-[#000000]/[0.5] z-40"
-          onClick={() => setCollapsed(true)}
-        />
-      ) : null}
       <aside
         className={`
         flex flex-col items-center h-full relative z-50
         bg-white
-        ${collapsed ? `${isMobileEnv ? "w-0" : "w-16 min-w-16"}` : "w-60"} max-w-sm 
-        ${!(isMobileEnv && collapsed) && "p-4"}
-        ${isMobileEnv && collapsed && "p-0"}
+        ${collapsed ? "w-16 min-w-16" : "w-60"} max-w-sm p-4
         rounded-sm
         transition-all duration-300 ease-in-out
       `}
       >
-        {!isMobileEnv ? (
-          <header
-            className={`flex items-center ${collapsed ? "flex-col" : "flex-row"} gap-4 w-full`}
+        <header
+          className={`flex items-center ${collapsed ? "flex-col" : "flex-row"} gap-4 w-full`}
+        >
+          <div
+            className={`flex-1 flex items-center ${collapsed && "order-2"}`}
           >
-            <div
-              className={`flex-1 flex items-center ${collapsed && "order-2"}`}
-            >
-              <Logo className="h-8 w-auto" />
-              {!collapsed && (
-                <span className="font-bold text-lg text-[#00a0e9]">ChatBot4J</span>
-              )}
-            </div>
-            <button
-              className={`
-            flex items-center justify-center
-            bg-transparent
-            ${collapsed ? "order-1" : "ml-auto"}
-          `}
-              onClick={() => setCollapsed(!collapsed)}
-              aria-label={collapsed ? "展开菜单" : "收起菜单"}
-            >
-              {collapsed ? (
-                <PanelLeftOpen className="w-4 h-4 text-[#606266] hover:text-text-button" />
-              ) : (
-                <PanelLeftClose className="w-4 h-4 text-[#606266] hover:text-text-button" />
-              )}
-            </button>
-          </header>
-        ) : null}
-        {isMobileEnv && collapsed && (
+            <Logo className="h-8 w-auto" />
+            {!collapsed && (
+              <span className="font-bold text-lg text-[#00a0e9]">ChatBot4J</span>
+            )}
+          </div>
           <button
             className={`
-            flex items-center justify-center
-            bg-transparent
-            absolute top-3 left-3
-            ${collapsed ? "order-1" : "ml-auto"}
-          `}
+          flex items-center justify-center
+          bg-transparent
+          ${collapsed ? "order-1" : "ml-auto"}
+        `}
             onClick={() => setCollapsed(!collapsed)}
             aria-label={collapsed ? "展开菜单" : "收起菜单"}
           >
             {collapsed ? (
-              <PanelLeftOpen className="w-4 h-4 text-[#606266]" />
+              <PanelLeftOpen className="w-4 h-4 text-[#606266] hover:text-text-button" />
             ) : (
-              <PanelLeftClose className="w-4 h-4 text-[#606266]" />
+              <PanelLeftClose className="w-4 h-4 text-[#606266] hover:text-text-button" />
             )}
           </button>
-        )}
+        </header>
         <button
           className={`
           flex items-center justify-center gap-2

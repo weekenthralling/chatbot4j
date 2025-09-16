@@ -107,3 +107,21 @@ export const getDatePeriod = (date: string | Date | undefined, now: Date): DateP
         year: targetYear
     };
 };
+
+export function getTimePeriod() {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 9) {
+    return "早上";
+  } else if (hour >= 9 && hour < 12) {
+    return "上午";
+  } else if (hour >= 12 && hour < 14) {
+    return "中午";
+  } else if (hour >= 14 && hour < 18) {
+    return "下午";
+  } else if (hour >= 18 && hour < 24) {
+    return "晚上";
+  } else {
+    return "凌晨";
+  }
+}

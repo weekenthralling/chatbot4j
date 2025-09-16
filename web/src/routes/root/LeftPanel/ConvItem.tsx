@@ -20,7 +20,6 @@ import { useGlobalMessage } from "@/contexts/MessageProvider";
 
 import { useDeleteConv } from "./hooks/useDeleteConv";
 import { useShareConv } from "./hooks/useShareConv";
-import { isMobile } from "@/utils/utils";
 
 const ConvItem = ({
   item,
@@ -41,10 +40,6 @@ const ConvItem = ({
   const [titleText, setTitleText] = useState(item.title);
 
   const [titleUpdating, setTitleUpdating] = useState(false);
-
-  const isMobileEnv = useMemo(() => {
-    return isMobile();
-  }, []);
 
   const { shareConv } = useShareConv({
     onError: (err, source) => {
@@ -235,18 +230,16 @@ const ConvItem = ({
             group/item
           `}
         >
-          {!isMobileEnv && (
-            <MessageSquareMore
-              // Note the colors!
-              className={`
-              w-5 h-5
-              ml-3
-              ${active ? "fill-text-button text-bg-highlight" : "fill-text-muted text-bg-secondary"}
-              group-hover/item:fill-text-button group-hover/item:text-bg-highlight
-              transition-colors
-            `}
-            />
-          )}
+          <MessageSquareMore
+            // Note the colors!
+            className={`
+            w-5 h-5
+            ml-3
+            ${active ? "fill-text-button text-bg-highlight" : "fill-text-muted text-bg-secondary"}
+            group-hover/item:fill-text-button group-hover/item:text-bg-highlight
+            transition-colors
+          `}
+          />
           <span className="flex-1 ml-2 text-sm truncate">{item.title}</span>
           <Popover
             placement="rightTop"

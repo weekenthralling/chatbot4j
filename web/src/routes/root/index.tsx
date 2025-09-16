@@ -16,8 +16,6 @@ import { ModelDTO, UserInfo } from "@/request/types";
 import Header from "./Header";
 import LeftPanel from "./LeftPanel";
 import SettingsModal from "./SettingsModal";
-import { isMobile } from "@/utils/utils";
-import MobileHeader from "@/routes/root/MobileHeader";
 
 interface LoaderData {
   user: UserInfo;
@@ -87,22 +85,17 @@ function Root() {
     window.location.href = "/oauth2/sign_out?rd=/";
   };
 
-  const isMobileEnv = useMemo(() => {
-    return isMobile();
-  }, []);
-
   return (
     <div
-      className={`flex w-screen h-screen flex-col ${isMobileEnv ? "p-0" : "p-2"}`}
+      className="flex w-screen h-screen flex-col p-2"
       style={{
         background: !convId ? `url("${BgImage}") center/cover no-repeat` : "#F6F6F6",
       }}
     >
-      {isMobileEnv && <MobileHeader />}
       <div className="flex-1 flex relative overflow-hidden">
         <LeftPanel />
         <div className="flex flex-1 flex-col overflow-hidden">
-          {!isMobileEnv && <Header />}
+          <Header />
           <main className="flex-1 relative overflow-hidden pb-10">
             <Outlet />
           </main>

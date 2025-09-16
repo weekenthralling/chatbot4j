@@ -11,7 +11,7 @@ import { useChatLayout } from "@/hooks/useChatLayout";
 import { useGlobalMessage } from "@/contexts/MessageProvider";
 import SmileImage from "@/assets/icons/smile.png";
 import { useUserStore } from "@/store/userStore";
-import { getTimePeriod, isMobile } from "@/utils/utils";
+import { getTimePeriod } from "@/utils/datetime";
 
 // TODO: Check if we can use react-router's action in this component
 const Index = () => {
@@ -22,9 +22,6 @@ const Index = () => {
   const messageApi = useGlobalMessage();
   const { id: convId } = useParams();
   const userInfo = useUserStore((state) => state.userInfo);
-  const isMobileEnv = useMemo(() => {
-    return isMobile();
-  }, []);
 
   const handleSend = throttle(async (message) => {
     setLoading(true);
@@ -77,10 +74,10 @@ const Index = () => {
         </div>
         <div
           className={`
-          ${isMobileEnv ? "w-full" : "w-[760px]"}
-          ${!convId ? "h-[160px]" : "h-[100px]"}
-          ${contentContainerClasses}
-        `}
+            w-[760px]
+            ${!convId ? "h-[160px]" : "h-[100px]"}
+            ${contentContainerClasses}
+          `}
         >
           <ChatInput onSend={handleSend} />
         </div>
