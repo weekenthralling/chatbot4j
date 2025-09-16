@@ -127,7 +127,7 @@ const ChatInput = ({
                 `}
         placeholder={
           receiving
-            ? "TableGPT正在运行…"
+            ? "ChatBot正在运行…"
             : "请在此输入你想说的话，点击 Enter 键发送"
         }
         aria-label="消息输入框"

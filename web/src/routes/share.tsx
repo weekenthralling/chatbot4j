@@ -74,7 +74,7 @@ const Share = () => {
           window.location.assign("/");
         }}
       >
-        开始使用数海闻涛
+        与ChatBot开始聊天
       </button>
     </div>
   );
