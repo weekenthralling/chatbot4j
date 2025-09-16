@@ -1,0 +1,230 @@
+@import "tailwindcss" important;
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+:root {
+  color: #313234;
+  background-color: #f6f6f6;
+
+  --color-text-primary: #313234;
+  --color-bg-primary: #f6f6f6;
+  --color-border-primary: #eeeeee;
+
+  --color-text-secondary: #606266;
+  --color-bg-secondary: #ffffff;
+  --color-border-secondary: #dddddd;
+
+  --color-text-button: #25b1ed;
+  --color-bg-button: #effaff;
+
+  --color-text-highlight: #25b1ed;
+  --color-bg-highlight: #effaff;
+
+  --color-confirm: #25b1ed;
+  --color-danger: #ff6542;
+  
+  /* Extended design tokens */
+  --color-text-muted: #a8a8a8;
+  --color-text-error: #ff453a;
+  --color-text-success: #25b1ed;
+  
+  --color-bg-input: #ffffff;
+  --color-bg-modal: #ffffff;
+  --color-bg-overlay: rgba(0, 0, 0, 0.4);
+  
+  --color-border-input: #25b1ed;
+  --color-border-modal: #c4c4c4;
+  --color-border-divider: #eeeeee;
+  
+  --color-accent-edit: #ff453a;
+  --color-accent-delete: #dd4f2e;
+}
+
+.dark {
+  color: #ffffff;
+  background-color: #171717;
+
+  --color-text-primary: #ffffff;
+  --color-bg-primary: #171717;
+  --color-border-primary: #424242;
+
+  --color-text-secondary: #dddddd;
+  --color-bg-secondary: #1e1e1e;
+  --color-border-secondary: #565656;
+
+  /* Extended design tokens - dark theme */
+  --color-text-muted: #8a8a8a;
+  --color-text-error: #ff3b30;
+  --color-text-success: #25b1ed;
+  
+  --color-bg-input: #2a2a2a;
+  --color-bg-modal: #1e1e1e;
+  --color-bg-overlay: rgba(0, 0, 0, 0.6);
+  
+  --color-border-input: #25b1ed;
+  --color-border-modal: #565656;
+  --color-border-divider: #424242;
+  
+  --color-accent-edit: #ff3b30;
+  --color-accent-delete: #ff6542;
+}
+
+@theme {
+  --color-text-primary: var(--color-text-primary);
+  --color-bg-primary: var(--color-bg-primary);
+  --color-border-primary: var(--color-border-primary);
+
+  --color-text-secondary: var(--color-text-secondary);
+  --color-bg-secondary: var(--color-bg-secondary);
+  --color-border-secondary: var(--color-border-secondary);
+
+  --color-text-button: var(--color-text-button);
+  --color-bg-button: var(--color-bg-button);
+
+  --color-text-highlight: var(--color-text-highlight);
+  --color-bg-highlight: var(--color-bg-highlight);
+
+  --color-confirm: var(--color-confirm);
+  --color-danger: var(--color-danger);
+  
+  /* Extended design tokens */
+  --color-text-muted: var(--color-text-muted);
+  --color-text-error: var(--color-text-error);
+  --color-text-success: var(--color-text-success);
+  
+  --color-bg-input: var(--color-bg-input);
+  --color-bg-modal: var(--color-bg-modal);
+  --color-bg-overlay: var(--color-bg-overlay);
+  
+  --color-border-input: var(--color-border-input);
+  --color-border-modal: var(--color-border-modal);
+  --color-border-divider: var(--color-border-divider);
+  
+  --color-accent-edit: var(--color-accent-edit);
+  --color-accent-delete: var(--color-accent-delete);
+}
+
+html {
+  font-size: 16px;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  line-height: 1.5;
+  font-weight: 400;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Screen reader only class for accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+p {
+  margin: 1em 0;
+}
+
+pre {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+input:-webkit-autofill {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #a8a8a8 !important;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #a8a8a8 !important;
+}
+
+button {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #838485;
+  -webkit-border-radius: 6px;
+}
+
+
+/* TODO: The following are copied from previous common.less
+ * We need to check whether these are still needed or if they can be removed
+ */
+.virtual-table {
+  .ant-table-placeholder {
+    pointer-events: none;
+
+    .ant-table-cell {
+      border: none;
+    }
+
+    .ant-empty-description {
+      color: #dddddd !important;
+    }
+  }
+}
+
+.ant-spin-nested-loading {
+  .ant-spin-container {
+    height: 100%;
+    &:after {
+      content: unset;
+    }
+  }
+}
+
+.dark-drop-down {
+  .ant-dropdown-menu {
+    padding: 0;
+
+    .ant-dropdown-menu-item {
+      font-size: 13px;
+      height: 35px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.ant-modal-content {
+  background: linear-gradient( 180deg, #d9eef8 20%, #FFFFFF 100%);
+}
+
+body > div:last-child img { display: inline-block; }
