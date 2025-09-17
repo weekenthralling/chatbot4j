@@ -1,0 +1,9 @@
+.github/
+.vscode/
+.idea/
+.git/
+
+src/test
+
+web/dist
+web/node_modules
