@@ -84,7 +84,7 @@ public class ConversationController {
                 .updatedAt(conversation.getUpdatedAt())
                 .build();
 
-        return new ResponseEntity<>(chat, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chat);
     }
 
     @GetMapping("")
@@ -115,7 +115,7 @@ public class ConversationController {
                 .toList();
 
         PageBean<Chat> result = PageBean.of(page, size, total, chats);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{convId}")
@@ -142,7 +142,7 @@ public class ConversationController {
             conversation.setPinned(true);
         }
         conversationService.saveConversation(conversation);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{convId}")
@@ -183,14 +183,14 @@ public class ConversationController {
                 .owner(conversation.getOwner())
                 .messages(messages)
                 .build();
-        return new ResponseEntity<>(chat, HttpStatus.OK);
+        return ResponseEntity.ok(chat);
     }
 
     @DeleteMapping("/{convId}")
     @Operation(summary = "Delete a conversation", description = "Delete a conversation")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "Successful"),
+                @ApiResponse(responseCode = "204", description = "Successful"),
                 @ApiResponse(responseCode = "400", description = "Bad request"),
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
                 @ApiResponse(responseCode = "404", description = "Conversation not found"),
@@ -205,6 +205,6 @@ public class ConversationController {
         }
 
         conversationService.deleteConversation(conversationId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 }
