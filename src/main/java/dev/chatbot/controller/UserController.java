@@ -1,5 +1,6 @@
 package dev.chatbot.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class UserController {
                 @ApiResponse(responseCode = "401", description = "Unauthorized"),
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
             })
-    public UserInfo getCurrentUserInfo(
+    public ResponseEntity<UserInfo> getCurrentUserInfo(
             @RequestHeader(name = "X-Forwarded-User", defaultValue = "dev") String userid,
             @RequestHeader(name = "X-Forwarded-Email", defaultValue = "dev@zjuici.com") String email,
             @RequestHeader(name = "X-Forwarded-Preferred-Username", defaultValue = "dev") String username) {
@@ -36,6 +37,6 @@ public class UserController {
         userInfo.setUserid(userid);
         userInfo.setEmail(email);
         userInfo.setUsername(username);
-        return userInfo;
+        return ResponseEntity.ok(userInfo);
     }
 }
