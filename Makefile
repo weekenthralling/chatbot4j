@@ -15,8 +15,10 @@ build:
 # Reports problems but does not modify the code.
 lint:
 	$(MVN_CMD) -T12C spotless:check
+	cd web && make lint
 
 # Automatically format the code to conform to a style guide.
 # Modifies the code to ensure consistent formatting.
 format:
 	$(MVN_CMD) -T12C spotless:apply
+	cd web && make format
