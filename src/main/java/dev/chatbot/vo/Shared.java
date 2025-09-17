@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import dev.chatbot.dto.ChatMessage;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 @Getter
 @Builder
