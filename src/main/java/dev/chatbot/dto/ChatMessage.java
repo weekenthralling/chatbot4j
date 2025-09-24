@@ -3,16 +3,24 @@ package dev.chatbot.dto;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessageType;
-import dev.langchain4j.data.message.CustomMessage;
+import dev.langchain4j.data.message.AudioContent;
+import dev.langchain4j.data.message.Content;
+import dev.langchain4j.data.message.ImageContent;
+import dev.langchain4j.data.message.PdfFileContent;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.TextContent;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.message.VideoContent;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author zhoumo
  */
-@Setter
 @Getter
 @Slf4j
 @Builder
@@ -69,23 +76,38 @@ public class ChatMessage {
     @JsonProperty("additional_kwargs")
     private Map<String, Object> additionalKwargs;
 
+    @JsonCreator
+    public ChatMessage(
+            @JsonProperty("id") String id,
+            @JsonProperty("parent_id") String parentId,
+            @JsonProperty("from") String from,
+            @JsonProperty("send_at") Instant sendAt,
+            @JsonProperty("type") String type,
+            @JsonProperty("content") String content,
+            @JsonProperty("additional_kwargs") Map<String, Object> additionalKwargs) {
+        this.id = id;
+        this.parentId = parentId;
+        this.from = from;
+        this.sendAt = sendAt;
+        this.type = type;
+        this.content = content;
+        this.additionalKwargs = additionalKwargs;
+    }
+
     /**
      * Convert from langchain4j ChatMessage to our ChatMessage DTO.
      * @param lcMessage the langchain4j ChatMessage
      * @return the converted ChatMessage DTO
      */
     public static ChatMessage fromLC(dev.langchain4j.data.message.ChatMessage lcMessage) {
-        final ChatMessageType messageType = lcMessage.type();
-        switch (messageType) {
-            case SYSTEM -> {
-                SystemMessage systemMessage = (SystemMessage) lcMessage;
+        switch (lcMessage) {
+            case SystemMessage systemMessage -> {
                 return ChatMessage.builder()
                         .content(systemMessage.text())
                         .type("system")
                         .build();
             }
-            case AI -> {
-                AiMessage aiMessage = (AiMessage) lcMessage;
+            case AiMessage aiMessage -> {
                 List<Map<String, String>> tools = aiMessage.toolExecutionRequests().stream()
                         .map(tool -> Map.of(
                                 "id", tool.id(),
@@ -93,31 +115,72 @@ public class ChatMessage {
                                 "arguments", tool.arguments()))
                         .toList();
 
-                Map<String, Object> attributes = aiMessage.attributes();
+                // Map<String, Object> attributes = aiMessage.attributes();
                 return ChatMessage.builder()
                         .content(aiMessage.text())
                         .type("ai")
-                        .id(attributes.get("id").toString())
-                        .parentId(attributes.get("parentId").toString())
-                        .sendAt(Instant.ofEpochMilli((long) attributes.get("sendAt")))
+                        // .id(attributes.get("id").toString())
+                        // .parentId(attributes.get("parentId").toString())
+                        // .sendAt(Instant.ofEpochMilli((long) attributes.get("sendAt")))
                         .additionalKwargs(Map.of("tool_calls", tools))
                         .build();
             }
-            case CUSTOM -> {
-                CustomMessage customMessage = (CustomMessage) lcMessage;
-                Map<String, Object> attributes = customMessage.attributes();
+            case ToolExecutionResultMessage toolExecutionResultMessage -> {
                 return ChatMessage.builder()
-                        .content(attributes.get("content").toString())
-                        .type(attributes.get("type").toString())
-                        .id(attributes.get("id").toString())
-                        // User message may not have parentId
-                        .parentId(attributes.getOrDefault("parentId", "").toString())
-                        .sendAt(Instant.ofEpochMilli((long) attributes.get("sendAt")))
-                        .additionalKwargs(customMessage.attributes())
+                        .content(toolExecutionResultMessage.text())
+                        .id(toolExecutionResultMessage.id())
+                        .type("tool")
+                        .additionalKwargs(Map.of("toolName", toolExecutionResultMessage.toolName()))
+                        .build();
+            }
+            case UserMessage userMessage -> {
+                Map<String, Object> metadata = userMessage.contents().stream()
+                        .map(ChatMessage::convertContent)
+                        .filter(Objects::nonNull)
+                        .flatMap(content -> content.entrySet().stream())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2));
+
+                return ChatMessage.builder()
+                        .content(userMessage.singleText())
+                        .type("human")
+                        .additionalKwargs(Map.of("artifacts", metadata))
                         .build();
             }
             default -> {
-                log.error("Unsupported message type: {}", messageType);
+                log.error("Unsupported message type: {}", lcMessage.type());
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Converts a Content object to a Map<String, Object>.
+     * This method uses `contentType` to determine the type of the content.
+     * It then casts the content to the appropriate type and extracts the relevant data.
+     * Finally, it creates a new Map<String, Object> with the extracted data.
+     *
+     * @param content the content to be converted
+     * @return Map<String, Object>
+     */
+    private static Map<String, Object> convertContent(Content content) {
+        switch (content) {
+            case TextContent textContent -> {
+                return Map.of("text", textContent.text());
+            }
+            case ImageContent imageContent -> {
+                return Map.of("image", imageContent.image().base64Data());
+            }
+            case AudioContent audioContent -> {
+                return Map.of("audio", audioContent.audio().base64Data());
+            }
+            case VideoContent videoContent -> {
+                return Map.of("video", videoContent.video().base64Data());
+            }
+            case PdfFileContent pdfFileContent -> {
+                return Map.of("pdf", pdfFileContent.pdfFile().base64Data());
+            }
+            default -> {
+                log.error("Unsupported content type: {}", content.type());
                 return null;
             }
         }
