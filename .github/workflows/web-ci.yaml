@@ -1,0 +1,70 @@
+name: ChatBot4J Web CI
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/web-ci.yml'
+      - 'web/**'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths:
+      - '.github/workflows/web-ci.yml'
+      - 'web/**'
+  workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
+
+jobs:
+  lint:
+    defaults:
+        run:
+          working-directory: web
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    - name: Activate Corepack
+      run: corepack enable
+    - name: Install modules
+      run: yarn install --immutable
+    - name: Run ESLint
+      run: make lint
+  test:
+    defaults:
+        run:
+          working-directory: web
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    - name: Activate Corepack
+      run: corepack enable
+    - name: Install modules
+      run: yarn install --immutable
+    - name: Run tests
+      run: make test
+  build:
+    defaults:
+        run:
+          working-directory: web
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    - name: Activate Corepack
+      run: corepack enable
+    - name: Install modules
+      run: yarn install --immutable
+    - name: Run build
+      run: yarn build

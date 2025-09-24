@@ -1,0 +1,63 @@
+name: ChatBot4J Backend CI
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/backend-ci.yml"
+      - "src/**"
+      - "pom.xml"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths:
+      - ".github/workflows/backend-ci.yml"
+      - "src/**"
+      - "pom.xml"
+  workflow_dispatch: # Allows to trigger the workflow manually in GitHub UI
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
+      - name: Lint with Maven
+        run: mvn verify --fail-at-end -Dcheckstyle.failOnViolation=true -Dspotless.check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
+      - name: Test with Maven
+        run: mvn test --fail-at-end
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
+      - name: Build with Maven
+        run: |
+          mvn clean package -DskipTests

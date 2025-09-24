@@ -1,0 +1,116 @@
+name: Publish ChatBot4J Docker Image
+
+on:
+  push:
+    tags:
+      - v**
+  workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  CACHE_IMAGE: ${{ github.repository }}/build-cache
+  CACHE_TAG: latest
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3.5.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5.8.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # semver has default priority 900, sha has default priority 100
+          # ref has default priority 600
+          # see <https://github.com/docker/metadata-action#priority-attribute>
+          # also, sha has a default prefix of '-sha'
+          # see <https://github.com/docker/metadata-action#typesha>
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,priority=850,prefix=
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6.18.0
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.CACHE_IMAGE }}:${{ env.CACHE_TAG }}
+          # See <https://docs.docker.com/build/cache/backends/#cache-mode>
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.CACHE_IMAGE }}:${{ env.CACHE_TAG }},mode=max
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
+  # The identifier 'push' may not be used more than once within the same scope.
+  # So to push multiple images, we need to use a different job.
+  build-and-push-local-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3.5.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5.8.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # semver has default priority 900, sha has default priority 100
+          # ref has default priority 600
+          # see <https://github.com/docker/metadata-action#priority-attribute>
+          # also, sha has a default prefix of '-sha'
+          # see <https://github.com/docker/metadata-action#typesha>
+          tags: |
+            type=semver,pattern={{version}},suffix=-local
+            type=sha,priority=850,prefix=,suffix=-local
+      - name: Build and push Docker `-local` image
+        id: push
+        uses: docker/build-push-action@v6.18.0
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: Dockerfile.local
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.CACHE_IMAGE }}:${{ env.CACHE_TAG }}-local
+          # See <https://docs.docker.com/build/cache/backends/#cache-mode>
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.CACHE_IMAGE }}:${{ env.CACHE_TAG }}-local,mode=max
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
