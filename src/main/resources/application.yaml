@@ -27,13 +27,13 @@ spring:
     show-sql: true # Print SQL logs
     properties:
       hibernate.format_sql: true # Format SQL logs
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost} # Redis host
-      port: ${REDIS_PORT:6379} # Redis port, default is 6379
-      password: ${REDIS_PASSWORD:} # Redis password, default is empty
-      database: ${REDIS_DATABASE:0} # Redis database index, default is 0
-      timeout: ${REDIS_TIMEOUT:2000} # Redis connection timeout in milliseconds
+  # data:
+  #   redis:
+  #     host: ${REDIS_HOST:localhost} # Redis host
+  #     port: ${REDIS_PORT:6379} # Redis port, default is 6379
+  #     password: ${REDIS_PASSWORD:} # Redis password, default is empty
+  #     database: ${REDIS_DATABASE:0} # Redis database index, default is 0
+  #     timeout: ${REDIS_TIMEOUT:2000} # Redis connection timeout in milliseconds
 
 logging:
   level:
