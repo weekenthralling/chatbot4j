@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/backend-ci.yaml"
       - "src/**"
       - "pom.xml"
   pull_request:
@@ -16,7 +16,7 @@ on:
       - opened
       - synchronize
     paths:
-      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/backend-ci.yaml"
       - "src/**"
       - "pom.xml"
   workflow_dispatch: # Allows to trigger the workflow manually in GitHub UI
@@ -33,7 +33,7 @@ jobs:
           java-version: "21"
           cache: "maven"
       - name: Lint with Maven
-        run: mvn verify --fail-at-end -Dcheckstyle.failOnViolation=true -Dspotless.check
+        run: mvn spotless:check --fail-at-end
 
   test:
     runs-on: ubuntu-latest
