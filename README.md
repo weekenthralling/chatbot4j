@@ -243,17 +243,22 @@ The project includes several code quality tools:
 The application provides a RESTful API with the following main endpoints:
 
 #### Conversations
-- `GET /api/conversations` - List user conversations
+- `GET /api/conversations` - List user conversations with pagination
 - `POST /api/conversations` - Create new conversation
-- `GET /api/conversations/{id}` - Get conversation details
+- `GET /api/conversations/{id}` - Get conversation details including messages
+- `PUT /api/conversations/{id}` - Update conversation (title, pinned status)
 - `DELETE /api/conversations/{id}` - Delete conversation
 
-#### Messages  
-- `GET /api/conversations/{id}/messages` - Get conversation messages
-- `POST /api/conversations/{id}/messages` - Send new message
-- `GET /api/conversations/{id}/messages/stream` - Stream messages (SSE)
+#### Assistant
+- `POST /api/{conversationId}/assistant` - Send message to AI assistant and get streaming response (Server-Sent Events)
 
-#### User Management
+#### Shares
+- `GET /api/shares` - List user's shared conversations with pagination
+- `POST /api/shares` - Share a conversation publicly
+- `GET /api/shares/{id}` - Get shared conversation details including messages
+- `DELETE /api/shares/{id}` - Unshare/delete a shared conversation
+
+#### Users
 - `GET /api/users/current` - Get current user information
 
 ### Interactive API Documentation
