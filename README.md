@@ -10,12 +10,11 @@ A modern, full-stack chatbot application built with **Spring Boot 3** (Java 21) 
 - **Conversation Management**: Create, store, and organize chat conversations
 - **Real-time Streaming**: Server-sent events for real-time message delivery
 - **Web Search Integration**: Enhanced responses with Tavily web search
-- **File Upload Support**: Handle various file formats for context
+
 
 ### User Experience
 - **Modern UI**: Responsive React interface with Ant Design components
-- **Dark/Light Mode**: Adaptive UI themes
-- **User Authentication**: OAuth2-based authentication system
+
 - **Conversation History**: Persistent chat history with date-based organization
 - **Share Functionality**: Share conversations with other users
 - **Accessibility**: ARIA-compliant interface for screen readers
@@ -23,16 +22,15 @@ A modern, full-stack chatbot application built with **Spring Boot 3** (Java 21) 
 ### Technical Features
 - **RESTful API**: Well-documented REST endpoints with OpenAPI/Swagger
 - **Database**: PostgreSQL with JPA/Hibernate ORM
-- **Caching**: Redis integration for performance optimization
 - **Containerized**: Docker support for easy deployment
 - **CI/CD**: GitHub Actions workflows for automated testing and deployment
 
 ## 📋 Prerequisites
 
 - **Java 21** (OpenJDK or Oracle JDK)
-- **Node.js 18+** with npm/yarn
+- **Yarn 4.9.2+** for frontend package management
 - **PostgreSQL 12+**
-- **Redis 6+** (optional, for caching)
+
 - **Docker** (optional, for containerized deployment)
 
 ## 🛠️ Technology Stack
@@ -42,7 +40,6 @@ A modern, full-stack chatbot application built with **Spring Boot 3** (Java 21) 
 - **Java 21** - Programming language
 - **LangChain4j** - LLM integration and AI workflows
 - **PostgreSQL** - Primary database
-- **Redis** - Caching layer
 - **HikariCP** - Database connection pooling
 - **SpringDoc OpenAPI** - API documentation
 - **Maven** - Dependency management and build tool
@@ -119,8 +116,6 @@ LLM_API_KEY=your-openai-api-key
 LLM_BASE_URL=https://api.openai.com/v1/
 LLM_MODEL=gpt-4o-mini
 TAVILY_API_KEY=your-tavily-api-key  # Optional, for web search
-REDIS_HOST=localhost                # Optional, for caching
-REDIS_PORT=6379
 ```
 
 ### 4. Build and Run
@@ -145,14 +140,14 @@ Or manually:
 
 ```bash
 # Build and run backend
-./mvnw clean package
+mvn clean package
 java -jar target/chatbot4j-*.jar
 
 # In another terminal, build and serve frontend
 cd web
-npm install
-npm run build
-npm run dev
+yarn install
+yarn build
+yarn dev
 ```
 
 ### 5. Access the Application
@@ -200,16 +195,16 @@ docker run -d \
 
 ```bash
 # Start the Spring Boot application in development mode
-./mvnw spring-boot:run
+mvn spring-boot:run
 
 # Run tests
-./mvnw test
+mvn test
 
 # Format code using Spotless
-./mvnw spotless:apply
+mvn spotless:apply
 
 # Check code formatting
-./mvnw spotless:check
+mvn spotless:check
 ```
 
 ### Frontend Development
@@ -218,19 +213,19 @@ docker run -d \
 cd web
 
 # Install dependencies
-npm install
+yarn install
 
 # Start development server with hot reload
-npm run dev
+yarn dev
 
 # Build for production
-npm run build
+yarn build
 
 # Run linting
-npm run lint
+yarn lint
 
 # Run tests
-npm run test
+yarn test
 ```
 
 ### Code Quality
@@ -264,15 +259,6 @@ The application provides a RESTful API with the following main endpoints:
 ### Interactive API Documentation
 
 Access the Swagger UI at `http://localhost:8080/swagger-ui.html` for interactive API testing and detailed endpoint documentation.
-
-## 🔒 Authentication
-
-The application supports OAuth2-based authentication:
-
-- Integration with oauth2-proxy for external authentication providers
-- User information extracted from HTTP headers
-- Session management with secure cookies
-- Role-based access control (planned)
 
 ## 🌐 Configuration
 
@@ -308,24 +294,12 @@ spring:
     show-sql: true
 ```
 
-### Redis Configuration (Optional)
-
-```yaml
-spring:
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
-```
-
 ## 🚀 Production Deployment
 
 ### Prerequisites for Production
 
 - Java 21 runtime environment
 - PostgreSQL database
-- Redis server (recommended)
 - Reverse proxy (nginx/Apache)
 - SSL certificates
 
@@ -333,10 +307,9 @@ spring:
 
 1. **Set production profiles**: `spring.profiles.active=prod`
 2. **Configure external database**: Use managed PostgreSQL service
-3. **Set up Redis cluster**: For high availability
-4. **Configure logging**: Use structured logging with log aggregation
-5. **Set up monitoring**: Application metrics and health checks
-6. **Security hardening**: Environment-specific security configurations
+3. **Configure logging**: Use structured logging with log aggregation
+4. **Set up monitoring**: Application metrics and health checks
+5. **Security hardening**: Environment-specific security configurations
 
 ### Health Checks
 
@@ -352,10 +325,10 @@ The application provides health check endpoints:
 
 ```bash
 # Backend tests
-./mvnw test
+mvn test
 
 # Frontend tests  
-cd web && npm test
+cd web && yarn test
 
 # All tests via Make
 make test
@@ -396,8 +369,8 @@ export JAVA_HOME=/path/to/java21
 **Solution**:
 ```bash
 cd web
-rm -rf node_modules package-lock.json
-npm install
+rm -rf node_modules yarn.lock
+yarn install
 ```
 
 #### Port Conflicts
@@ -409,9 +382,8 @@ npm install
 ### Performance Optimization
 
 1. **Database**: Ensure proper indexing on frequently queried columns
-2. **Redis**: Enable Redis for caching conversation data
-3. **JVM**: Tune JVM parameters for production workloads
-4. **Frontend**: Enable gzip compression and CDN for static assets
+2. **JVM**: Tune JVM parameters for production workloads
+3. **Frontend**: Enable gzip compression and CDN for static assets
 
 ## 🤝 Contributing
 
