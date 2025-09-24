@@ -148,7 +148,7 @@ const LeftPanel = () => {
           >
             <Logo className="h-8 w-auto" />
             {!collapsed && (
-              <span className="font-bold text-lg text-[#00a0e9]">ChatBot4J</span>
+              <span className="ml-2 font-bold text-lg text-[#00a0e9]">ChatBot4J</span>
             )}
           </div>
           <button
