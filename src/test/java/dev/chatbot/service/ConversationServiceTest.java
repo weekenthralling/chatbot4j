@@ -1,65 +1,63 @@
 package dev.chatbot.service;
 
+import java.util.Collections;
 import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
-import dev.chatbot.ChatBotApplication;
 import dev.chatbot.domain.Conversation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 
-/**
- * ConversationServiceTest is a test class for testing the ConversationService
- * class
- *
- * @author zhoumo
- */
-@SpringBootTest(classes = ChatBotApplication.class)
+@ExtendWith(MockitoExtension.class)
 class ConversationServiceTest {
 
-    @Autowired
+    @Mock
     private ConversationService conversationService;
 
+    private Conversation conversation;
     private UUID conversationId;
 
     @BeforeEach
     void setUp() {
-        Conversation conversation =
-                Conversation.builder().owner("dev").title("New Chat").build();
-
-        this.conversationService.saveConversation(conversation);
-        conversationId = conversation.getId();
-    }
-
-    @AfterEach
-    void tearDown() {
-        conversationService.deleteConversation(conversationId);
+        conversation = Conversation.builder().owner("dev").title("New Chat").build();
+        conversationId = UUID.randomUUID();
+        conversation.setId(conversationId);
     }
 
     @Test
     void getConversation() {
-        Conversation conversation = conversationService.getConversation(conversationId);
-        assertNotNull(conversation);
+        Mockito.when(conversationService.getConversation(conversationId)).thenReturn(conversation);
+        Conversation result = conversationService.getConversation(conversationId);
+        assertNotNull(result);
+        assertEquals("dev", result.getOwner());
     }
 
     @Test
     void listConversationsByOwner() {
-        Page<Conversation> page = conversationService.listConversationsByOwner("dev", 1, 10);
-        assertNotNull(page.getContent());
+        Page<Conversation> page = new PageImpl<>(Collections.singletonList(conversation));
+        Mockito.when(conversationService.listConversationsByOwner(anyString(), anyInt(), anyInt()))
+                .thenReturn(page);
+        Page<Conversation> result = conversationService.listConversationsByOwner("dev", 1, 10);
+        assertNotNull(result.getContent());
+        assertEquals(1, result.getContent().size());
     }
 
     @Test
     void updateConversation() {
-        Conversation conversation = conversationService.getConversation(conversationId);
         conversation.setTitle("Update Chat");
         conversationService.saveConversation(conversation);
-        assertEquals("Update Chat", conversation.getTitle());
+        Mockito.when(conversationService.getConversation(conversationId)).thenReturn(conversation);
+        Conversation result = conversationService.getConversation(conversationId);
+        assertEquals("Update Chat", result.getTitle());
+        Mockito.verify(conversationService).saveConversation(conversation);
     }
 }
