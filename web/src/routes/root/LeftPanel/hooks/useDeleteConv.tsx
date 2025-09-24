@@ -30,7 +30,9 @@ export const useDeleteConv = ({
       modal.confirm({
         title: <div className="mt-3">删除对话</div>,
         content: (
-          <div className="mb-2 text-white">{`是否确认删除对话\"${item.title}\"?`}</div>
+          <div className="mb-2 text-[#606266]">
+            {`是否确认删除对话"${item.title.length > 10 ? item.title.slice(0, 10) + '...' : item.title}"?`}
+          </div>
         ),
         icon: <RemoveDialogIcon className="mr-4" />,
         okText: "确定",
