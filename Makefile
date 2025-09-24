@@ -9,7 +9,7 @@ endif
 
 build:
 	$(MVN_CMD) --version
-	$(MVN_CMD) -U -T12C clean package
+	$(MVN_CMD) -U -T12C clean package -DskipTests
 
 # Analyze code for errors, potential issues, and coding standard violations.
 # Reports problems but does not modify the code.
@@ -22,3 +22,9 @@ lint:
 format:
 	$(MVN_CMD) -T12C spotless:apply
 	cd web && make format
+
+# Run unit tests to verify code functionality and correctness.
+# Ensures that the code behaves as expected and helps catch regressions.
+test:
+	$(MVN_CMD) -T12C test
+	cd web && make test
