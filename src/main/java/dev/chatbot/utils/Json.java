@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import dev.chatbot.exception.BusinessException;
 
@@ -29,6 +30,8 @@ public class Json {
      * Initialize configuration
      */
     static {
+        // Register JavaTimeModule to support Java 8 date/time types (Instant, LocalDateTime, etc.)
+        mapper.registerModule(new JavaTimeModule());
         // All fields of the object are listed in
         mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
         // Cancel the default conversion timestamps form
