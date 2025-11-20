@@ -8,14 +8,14 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/web-ci.yml'
+      - '.github/workflows/web-ci.yaml'
       - 'web/**'
   pull_request:
     types:
       - opened
       - synchronize
     paths:
-      - '.github/workflows/web-ci.yml'
+      - '.github/workflows/web-ci.yaml'
       - 'web/**'
   workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
 

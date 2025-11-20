@@ -7,3 +7,9 @@ updates:
     ignore:
       # ignore Maven APIs/SPIs
       - dependency-name: org.apache.maven:*
+  - directory: "/web"
+    package-ecosystem: "npm"
+    schedule:
+      interval: daily
+    labels:
+      - dependencies
