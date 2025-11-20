@@ -40,7 +40,8 @@ export interface MessageDTO {
   id: string;
   parent_id?: string;
   from?: string; // username. Could be null when we are constructing it from sub-components which does not have user info.
-  content: string | Array<string | Record<string, any>>;
+  content: string;
+  reasoning?: string; // Store AI's reasoning for the response
   type: string;
   sent_at: string;
   additional_kwargs?: any;

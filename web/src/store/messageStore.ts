@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { isNil } from "lodash";
 import { HumanMessageDTO, MessageDTO } from "@/request/types";
-import { groupMessages, mergeContentChunks } from "@/utils/messages";
+import { groupMessages } from "@/utils/messages";
 
 
 // 定义 store 的类型
@@ -151,12 +151,13 @@ export const useMessageStore = create<MessageState>()((set) => ({
     }
 
     // Else, update the message.
-    // The `content` is "concated", everything else are "updated".
+    // The `content` and `reasoning` is "concated", everything else are "updated".
     const matchedMessage = groupMatch.messages[messageMatchIndex];
     const updatedMessage = {
       ...matchedMessage,
       ...message,
-      content: mergeContentChunks(matchedMessage.content, message.content),
+      content: matchedMessage.content + message.content,
+      reasoning: (matchedMessage.reasoning ?? "") + (message.reasoning ?? ""),
     };
     // Replace the message in the group.
     const updatedGroup = {
