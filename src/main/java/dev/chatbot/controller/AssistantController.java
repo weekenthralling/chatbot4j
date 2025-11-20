@@ -94,6 +94,7 @@ public class AssistantController {
                                 .content("An error occurred: " + error.getMessage())
                                 .build();
                         sink.next(toJson(errorMessage));
+                        sink.complete();
                     })
                     .start();
         });
