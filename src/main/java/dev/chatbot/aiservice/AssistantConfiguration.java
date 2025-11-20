@@ -28,12 +28,10 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @RequiredArgsConstructor
 public class AssistantConfiguration {
 
-    // private final EmbedProperties embedProperties;
     private final LLMProperties llmProperties;
     private final TavilyProperties tavilyProperties;
     private final PersistentChatMemoryStore chatMemoryStore;
     private final List<ChatModelListener> listeners;
-    // private final RedisProperties redisProperties;
 
     @Bean
     WebSearchEngine webSearchEngine() {
@@ -48,31 +46,6 @@ public class AssistantConfiguration {
                 .timeout(tavilyProperties.getTimeout());
         return builder.build();
     }
-
-    // @Bean
-    // EmbeddingModel embeddingModel() {
-    //     return HuggingfaceEmbeddingModel.builder()
-    //             .baseUrl(embedProperties.getBaseUrl())
-    //             .normalize(true)
-    //             .truncate(false)
-    //             .maxRetries(3)
-    //             .maxSegmentsPerBatch(32)
-    //             .logRequests(false)
-    //             .logResponses(false)
-    //             .build();
-    // }
-
-    // @Bean
-    // RedisEmbeddingStore redisEmbeddingStore() {
-    //     return RedisEmbeddingStore.builder()
-    //             .host(redisProperties.getHost())
-    //             .port(redisProperties.getPort())
-    //             .password(redisProperties.getPassword())
-    //             .prefix("chatbot4j:embedding:job:")
-    //             .metadataKeys(List.of("Company", "Description", "Location", "URL"))
-    //             .dimension(1024)
-    //             .build();
-    // }
 
     @Bean
     StreamingChatModel model() {
@@ -103,7 +76,6 @@ public class AssistantConfiguration {
         return List.of(
                 new WeatherTool(),
                 new DatetimeTool(),
-                // new JobSearchTool(embeddingModel, embeddingStore),
                 new WebSearchTool(webSearchEngine));
     }
 
