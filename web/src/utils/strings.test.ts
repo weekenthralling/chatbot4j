@@ -1,6 +1,5 @@
 import { getLen } from "./strings";
 
-
 describe("getLen", () => {
   test("returns 0 for an empty string", () => {
     expect(getLen("")).toBe(0);

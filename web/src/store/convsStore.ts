@@ -1,20 +1,19 @@
 import { create } from "zustand";
 import { ConversationDTO } from "@/request/types";
 
-
 interface Pagination {
   total: number;
   current_page?: string;
   current_page_backwards?: string;
   previous_page?: string;
   next_page?: string;
-};
+}
 
 interface UpdateConv {
   id: string;
   title?: string;
   pinned?: boolean;
-};
+}
 
 // 定义 store 的类型
 interface ConvsState {
@@ -109,11 +108,5 @@ export const useConvsStore = create<ConvsState>()((set) => ({
   setPagination: (pagination) => set(() => ({ pagination })),
 }));
 
-export const {
-  setConvs,
-  addConv,
-  updateConv,
-  removeConv,
-  moveTopByConvId,
-  setPagination,
-} = useConvsStore.getState();
+export const { setConvs, addConv, updateConv, removeConv, moveTopByConvId, setPagination } =
+  useConvsStore.getState();

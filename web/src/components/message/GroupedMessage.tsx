@@ -35,20 +35,15 @@ export const Message = ({
 /**
  *
  */
-const GroupedMessage = ({
-  children,
-  frozen = false,
-}: {
-  children: any[];
-  frozen?: boolean;
-}) => {
+const GroupedMessage = ({ children, frozen = false }: { children: any[]; frozen?: boolean }) => {
   const { id: convId } = useParams();
   const models = useModelsStore((state) => state.models);
   const userInfo = useUserStore((state) => state.userInfo);
 
-   return (
+  return (
     <div className="flex flex-col px-4">
-      {children && children.length && (
+      {children &&
+        children.length &&
         children.map((message, index) => {
           const fromMe = message.type === "human";
           return (
@@ -63,34 +58,24 @@ const GroupedMessage = ({
                 }
               `}
             >
-              <Message
-                message={message}
-                fromMe={fromMe}
-                convId={convId!}
-              />
+              <Message message={message} fromMe={fromMe} convId={convId!} />
               {/* actions */}
               {!frozen && !fromMe && index === children.length - 1 && (
                 <div>
                   {/* We don't display model name unless we deployed more than one model */}
-                  {models.length > 1 &&
-                    message.additional_kwargs?.model && (
-                      <span className="text-[#8a8a8a] text-[13px]">
-                        {message.additional_kwargs.model}
-                      </span>
-                    )}
-                  <MessageToolBar
-                    message={message}
-                    conv_id={convId ?? ""}
-                  />
+                  {models.length > 1 && message.additional_kwargs?.model && (
+                    <span className="text-[#8a8a8a] text-[13px]">
+                      {message.additional_kwargs.model}
+                    </span>
+                  )}
+                  <MessageToolBar message={message} conv_id={convId ?? ""} />
                 </div>
               )}
             </div>
           );
-        })
-      )}
+        })}
     </div>
   );
 };
 
 export default GroupedMessage;
-

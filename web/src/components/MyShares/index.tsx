@@ -7,13 +7,7 @@ import { Page, ShareDTO } from "@/request/types";
 import { useGlobalMessage } from "@/contexts/MessageProvider";
 
 // TODO: I want to totally rewrite this component, do not use table, and use infinite scroll instead
-const MyShares = ({
-  open,
-  onCLose,
-}: {
-  open: boolean;
-  onCLose: () => void;
-}) => {
+const MyShares = ({ open, onCLose }: { open: boolean; onCLose: () => void }) => {
   const messageApi = useGlobalMessage();
   const [sharePage, setSharePage] = useState<Page<ShareDTO>>({
     items: [],

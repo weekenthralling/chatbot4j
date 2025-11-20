@@ -1,4 +1,3 @@
-
 /**
  * Get the length of a string. Non-ASCII characters are counted as 2.
  */

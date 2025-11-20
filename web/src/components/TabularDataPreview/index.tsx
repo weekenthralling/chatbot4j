@@ -5,19 +5,25 @@ import { X } from "lucide-react";
 
 import VirtualTable from "./VirtualTable";
 
-
-const TabularDataPreview = ({ open, filename, previewUrl, onClose }: {
+const TabularDataPreview = ({
+  open,
+  filename,
+  previewUrl,
+  onClose,
+}: {
   filename: string;
   previewUrl: string;
   open: boolean;
   onClose: () => void;
 }) => {
-  const [sheets, setSheets] = useState<{
-    sheetName: string;
-    dataSource: any[];
-    merges?: WorkSheet["!merges"];
-    columnCount: number;
-  }[]>([]);
+  const [sheets, setSheets] = useState<
+    {
+      sheetName: string;
+      dataSource: any[];
+      merges?: WorkSheet["!merges"];
+      columnCount: number;
+    }[]
+  >([]);
   const [fileLoading, setFileLoading] = useState(false);
 
   const getColumnCountFromRef = (sheet: Sheet) => {
@@ -97,11 +103,7 @@ const TabularDataPreview = ({ open, filename, previewUrl, onClose }: {
       }}
       cancelText="取消"
     >
-      <div
-        className="mb-5 text-base leading-[23px]"
-      >
-        {filename}
-      </div>
+      <div className="mb-5 text-base leading-[23px]">{filename}</div>
       <ConfigProvider
         theme={{
           components: {

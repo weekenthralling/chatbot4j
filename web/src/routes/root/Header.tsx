@@ -25,8 +25,7 @@ const Header = () => {
                 key: model.name,
               })),
               selectedKeys: currentModel.name ? [currentModel.name] : [],
-              onClick: ({ key }) =>
-                setCheckedModel(models.find((item) => item.name === key)!),
+              onClick: ({ key }) => setCheckedModel(models.find((item) => item.name === key)!),
             }}
           >
             <button

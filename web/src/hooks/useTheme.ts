@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  darcula,
-  googlecode,
-} from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { darcula, googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 type Theme = "light" | "dark" | "system";
 type EffectiveTheme = "light" | "dark";

@@ -3,7 +3,11 @@ import { VariableSizeGrid as Grid } from "react-window";
 import { WorkSheet } from "xlsx";
 import { Tooltip } from "antd";
 
-const VirtualTable = ({ data, merges, columnCount }: {
+const VirtualTable = ({
+  data,
+  merges,
+  columnCount,
+}: {
   data: string[][];
   merges: WorkSheet["!merges"];
   columnCount: number;
@@ -25,9 +29,7 @@ const VirtualTable = ({ data, merges, columnCount }: {
   }) => {
     const cellData = data[rowIndex]?.[columnIndex];
     // 计算合并单元格偏移
-    const merge = merges!.find(
-      (m) => m.s.r === rowIndex && m.s.c === columnIndex,
-    );
+    const merge = merges!.find((m) => m.s.r === rowIndex && m.s.c === columnIndex);
     if (merge) {
       const rowSpan = merge.e.r - merge.s.r + 1;
       const colSpan = merge.e.c - merge.s.c + 1;
@@ -38,10 +40,7 @@ const VirtualTable = ({ data, merges, columnCount }: {
           style={{
             ...style,
             fontSize: "14px",
-            color:
-              rowIndex === 0
-                ? "#dddddd"
-                : "#a8a8a8",
+            color: rowIndex === 0 ? "#dddddd" : "#a8a8a8",
             alignItems: "center",
             display: "grid",
             gridRow: `span ${rowSpan}`,
@@ -49,16 +48,11 @@ const VirtualTable = ({ data, merges, columnCount }: {
             width: `${width}px`,
             height: `${height}px`,
             padding: "0 12px",
-            borderBottom:
-              rowIndex !== data.length - 1
-                ? "1px solid #636363"
-                : "none",
-            background:
-              rowIndex === 0 ? "#424242" : "#383838",
+            borderBottom: rowIndex !== data.length - 1 ? "1px solid #636363" : "none",
+            background: rowIndex === 0 ? "#424242" : "#383838",
             borderRight: "1px solid solid #636363",
             // borderTop: rowIndex === 0 ? "1px solid #ddd" : "none",
-            borderLeft:
-              columnIndex !== 0 ? "1px solid #636363" : "none",
+            borderLeft: columnIndex !== 0 ? "1px solid #636363" : "none",
           }}
         >
           <Tooltip placement="top" title={cellData}>
@@ -69,11 +63,7 @@ const VirtualTable = ({ data, merges, columnCount }: {
     }
     // 如果单元格属于某个合并区域内，不进行渲染
     const inMergedRange = merges!.some(
-      (m) =>
-        rowIndex >= m.s.r &&
-        rowIndex <= m.e.r &&
-        columnIndex >= m.s.c &&
-        columnIndex <= m.e.c,
+      (m) => rowIndex >= m.s.r && rowIndex <= m.e.r && columnIndex >= m.s.c && columnIndex <= m.e.c,
     );
     if (inMergedRange) {
       return null;
@@ -84,24 +74,16 @@ const VirtualTable = ({ data, merges, columnCount }: {
         style={{
           ...style,
           fontSize: "14px",
-          color:
-            rowIndex === 0
-              ? "#dddddd"
-              : "#a8a8a8",
+          color: rowIndex === 0 ? "#dddddd" : "#a8a8a8",
           display: "flex",
           alignItems: "center",
           padding: "0 12px",
           boxSizing: "border-box",
-          borderBottom:
-            rowIndex !== data.length - 1
-              ? "1px solid #636363"
-              : "none",
-          background:
-            rowIndex === 0 ? "#424242" : "#383838",
+          borderBottom: rowIndex !== data.length - 1 ? "1px solid #636363" : "none",
+          background: rowIndex === 0 ? "#424242" : "#383838",
           borderRight: "1px solid solid #636363",
           // borderTop: rowIndex === 0 ? "1px solid #ddd" : "none",
-          borderLeft:
-            columnIndex !== 0 ? "1px solid #636363" : "none",
+          borderLeft: columnIndex !== 0 ? "1px solid #636363" : "none",
         }}
       >
         <Tooltip placement="top" title={cellData}>
@@ -112,8 +94,7 @@ const VirtualTable = ({ data, merges, columnCount }: {
   };
 
   const height = useMemo(
-    () =>
-      data.length * getRowHeight() > 560 ? 560 : data.length * getRowHeight(),
+    () => (data.length * getRowHeight() > 560 ? 560 : data.length * getRowHeight()),
     [data.length, getRowHeight],
   );
   return (

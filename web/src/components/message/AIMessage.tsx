@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { AIMessageDTO } from "@/request/types";
 import { createKeyboardHandler } from "@/utils/accessibility";
@@ -8,21 +8,23 @@ import DeepThink from "@/assets/icons/deep_think.svg?react";
 import MarkdownContent from "./MarkdownContent";
 // import ToolCall from "./ToolCall";
 
-
 type OpenConfig = {
   toolCalls?: boolean;
   thinking?: boolean;
   // future: image, chart, reference...
 };
 
-const AIMessage = ({ message, defaultOpenConfig = {} }: {
+const AIMessage = ({
+  message,
+  defaultOpenConfig = {},
+}: {
   message: AIMessageDTO;
-  defaultOpenConfig?: OpenConfig;  // Whether the tool calls are opened by default.
+  defaultOpenConfig?: OpenConfig; // Whether the tool calls are opened by default.
 }) => {
   const [openState, setOpenState] = useState<OpenConfig>(defaultOpenConfig);
 
   const toggle = (key: keyof OpenConfig) => {
-    setOpenState(prev => ({ ...prev, [key]: !prev[key] }));
+    setOpenState((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -46,7 +48,7 @@ const AIMessage = ({ message, defaultOpenConfig = {} }: {
             role="button"
             tabIndex={0}
             aria-expanded={!!openState.thinking}
-            aria-label={`${!!openState.thinking ? '收起' : '展开'}思考内容`}
+            aria-label={`${!!openState.thinking ? "收起" : "展开"}思考内容`}
           >
             <DeepThink className="text-[18px] mr-1" />
             <span>思考内容</span>

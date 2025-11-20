@@ -74,9 +74,7 @@ const LeftPanel = () => {
 
         if (!period) {
           const fallbackKey = "其他";
-          !result[fallbackKey]
-            ? (result[fallbackKey] = [conv])
-            : result[fallbackKey].push(conv);
+          !result[fallbackKey] ? (result[fallbackKey] = [conv]) : result[fallbackKey].push(conv);
           return;
         }
 
@@ -140,16 +138,10 @@ const LeftPanel = () => {
         transition-all duration-300 ease-in-out
       `}
       >
-        <header
-          className={`flex items-center ${collapsed ? "flex-col" : "flex-row"} gap-4 w-full`}
-        >
-          <div
-            className={`flex-1 flex items-center ${collapsed && "order-2"}`}
-          >
+        <header className={`flex items-center ${collapsed ? "flex-col" : "flex-row"} gap-4 w-full`}>
+          <div className={`flex-1 flex items-center ${collapsed && "order-2"}`}>
             <Logo className="h-8 w-auto" />
-            {!collapsed && (
-              <span className="ml-2 font-bold text-lg text-[#00a0e9]">ChatBot4J</span>
-            )}
+            {!collapsed && <span className="ml-2 font-bold text-lg text-[#00a0e9]">ChatBot4J</span>}
           </div>
           <button
             className={`
@@ -180,13 +172,9 @@ const LeftPanel = () => {
           <MessageCirclePlus
             className={`w-4 h-4 hover:text-text-button ${collapsed ? "text-[#606266]" : "text-[#00a0e9]"}`}
           />
-          {!collapsed && (
-            <span className="text-sm text-[#00a0e9]">新建会话</span>
-          )}
+          {!collapsed && <span className="text-sm text-[#00a0e9]">新建会话</span>}
         </button>
-        {collapsed && (
-          <CollapsedMenu groupedConversations={groupedMenuByTimeAndPinned} />
-        )}
+        {collapsed && <CollapsedMenu groupedConversations={groupedMenuByTimeAndPinned} />}
         {!collapsed && (
           <div className="flex-1 overflow-y-auto">
             <ConvList
@@ -202,17 +190,10 @@ const LeftPanel = () => {
             content={
               <div className="w-[290px] rounded-xl">
                 <div className="flex items-center border-b border-solid border-[#5B6B79]/20 py-3 px-2">
-                  <Avatar
-                    icon={<UserIcon />}
-                    className="text-xl cursor-pointer"
-                  />
+                  <Avatar icon={<UserIcon />} className="text-xl cursor-pointer" />
                   <div className="ml-2.5 text-xs">
-                    <div className="font-semibold leading-[22px]">
-                      {userInfo?.username}
-                    </div>
-                    <div className="leading-5 text-gray-500">
-                      {userInfo?.email}
-                    </div>
+                    <div className="font-semibold leading-[22px]">{userInfo?.username}</div>
+                    <div className="leading-5 text-gray-500">{userInfo?.email}</div>
                   </div>
                 </div>
                 <div className="pt-3 flex flex-col gap-2">
@@ -240,9 +221,7 @@ const LeftPanel = () => {
               <Avatar icon={<UserIcon />} className="h-6 w-6 cursor-pointer" />
               {!collapsed ? (
                 <>
-                  <div className="ml-3 w-[70%] truncate">
-                    {userInfo?.username}
-                  </div>
+                  <div className="ml-3 w-[70%] truncate">{userInfo?.username}</div>
                   <ChevronUp className="ml-auto text-[#303133] size-4 rotate-180" />
                 </>
               ) : null}

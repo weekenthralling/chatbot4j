@@ -7,7 +7,6 @@ import remarkMath from "remark-math";
 
 import { useTheme } from "@/hooks/useTheme";
 
-
 const MarkdownContent = ({ title, text }: { title?: string; text: string }) => {
   const { codeTheme } = useTheme();
 
@@ -22,17 +21,16 @@ const MarkdownContent = ({ title, text }: { title?: string; text: string }) => {
           const { children, className, node, ref, ...rest } = props;
           const match = /language-(\w+)/.exec(className || "");
           if (!match) {
-            return <code {...rest} className={className}>{children}</code>;
+            return (
+              <code {...rest} className={className}>
+                {children}
+              </code>
+            );
           }
           return (
-            <SyntaxHighlighter
-              {...rest}
-              PreTag="div"
-              language={match[1]}
-              style={codeTheme}
-            >
+            <SyntaxHighlighter {...rest} PreTag="div" language={match[1]} style={codeTheme}>
               {String(children).replace(/\n$/, "")}
-            </SyntaxHighlighter >
+            </SyntaxHighlighter>
           );
         },
         table: ({ node, ...props }) => (
@@ -43,13 +41,9 @@ const MarkdownContent = ({ title, text }: { title?: string; text: string }) => {
             />
           </div>
         ),
-        thead: ({ children }) => (
-          <thead className="text-[12px]">{children}</thead>
-        ),
+        thead: ({ children }) => <thead className="text-[12px]">{children}</thead>,
         tbody: ({ children }) => (
-          <tbody className="divide-y divide-gray-200 text-[12px]">
-            {children}
-          </tbody>
+          <tbody className="divide-y divide-gray-200 text-[12px]">{children}</tbody>
         ),
         tr: ({ children }) => (
           <tr className="text-[12px] border-[0.5px] border-gray-200 transition-colors">
@@ -69,7 +63,7 @@ const MarkdownContent = ({ title, text }: { title?: string; text: string }) => {
       }}
     >
       {text}
-    </Markdown >
+    </Markdown>
   );
 };
 
