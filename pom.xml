@@ -21,7 +21,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springdoc.version>2.8.8</springdoc.version>
-        <langchain4j.version>1.4.0-beta10</langchain4j.version>
+        <langchain4j.version>1.8.0-beta15</langchain4j.version>
         <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     </properties>
@@ -103,12 +103,6 @@
             <scope>annotationProcessor</scope>
         </dependency>
 
-        <!-- Spring Boot Redis -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -117,22 +111,9 @@
             <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- LangChain4j Dependencies Start-->
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-spring-boot-starter</artifactId>
-            <version>${langchain4j.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
-            <version>${langchain4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-community-redis</artifactId>
             <version>${langchain4j.version}</version>
         </dependency>
 
