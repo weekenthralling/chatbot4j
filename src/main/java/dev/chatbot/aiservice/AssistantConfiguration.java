@@ -73,10 +73,7 @@ public class AssistantConfiguration {
 
     @Bean
     public List<Object> toolkit(WebSearchEngine webSearchEngine) {
-        return List.of(
-                new WeatherTool(),
-                new DatetimeTool(),
-                new WebSearchTool(webSearchEngine));
+        return List.of(new WeatherTool(), new DatetimeTool(), new WebSearchTool(webSearchEngine));
     }
 
     @Bean
