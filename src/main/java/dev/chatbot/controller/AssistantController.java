@@ -1,5 +1,6 @@
 package dev.chatbot.controller;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.langchain4j.service.TokenStream;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,6 +21,8 @@ import dev.chatbot.aiservice.StreamingAssistant;
 import dev.chatbot.dto.ChatMessage;
 
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
+
+import static dev.chatbot.utils.Json.toJson;
 
 /**
  * AssistantController is a REST controller that handles requests related to the
@@ -47,6 +51,51 @@ public class AssistantController {
     public Flux<String> assistant(@PathVariable String conversationId, @RequestBody ChatMessage message) {
         // Use conversation id as the session id for the conversation
         UUID sessionId = UUID.fromString(conversationId);
-        return this.assistant.chat(sessionId, message.getContent());
+
+        String runId = UUID.randomUUID().toString();
+
+        return Flux.create(sink -> {
+            TokenStream tokenStream = this.assistant.chat(sessionId, message.getContent());
+
+            tokenStream
+                    .onPartialResponse(token -> {
+                        ChatMessage partialMessage = ChatMessage.builder()
+                                .id(runId)
+                                .parentId(message.getId())
+                                .type("AIMessageChunk")
+                                .from("ai")
+                                .sendAt(Instant.now())
+                                .content(token)
+                                .build();
+                        sink.next(toJson(partialMessage));
+                    })
+                    .onPartialThinking(partialThinking -> {
+                        ChatMessage thinkMessage = ChatMessage.builder()
+                                .id(runId)
+                                .parentId(message.getId())
+                                .type("AIMessageChunk")
+                                .from("ai")
+                                .sendAt(Instant.now())
+                                .reasoning(partialThinking.text())
+                                .content("") // Empty content when only thinking
+                                .build();
+                        sink.next(toJson(thinkMessage));
+                    })
+                    .onCompleteResponse(response -> {
+                        sink.next("[DONE]");
+                        sink.complete();
+                    })
+                    .onError(error -> {
+                        ChatMessage errorMessage = ChatMessage.builder()
+                                .id(runId)
+                                .parentId(message.getId())
+                                .type("error")
+                                .sendAt(Instant.now())
+                                .content("An error occurred: " + error.getMessage())
+                                .build();
+                        sink.next(toJson(errorMessage));
+                    })
+                    .start();
+        });
     }
 }
