@@ -39,8 +39,7 @@ export const useShareConv = ({
               />
               <button
                 style={{
-                  background:
-                    "linear-gradient( 136deg, #D8FF7D 0%, #7DD6FF 100%)",
+                  background: "linear-gradient( 136deg, #D8FF7D 0%, #7DD6FF 100%)",
                 }}
                 className="flex relative items-center gap-2 px-4 py-3 ml-4
                            text-sm font-bold text-[#606266] bg-white rounded

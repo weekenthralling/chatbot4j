@@ -18,26 +18,26 @@ export interface AriaLabelOptions {
  * 生成标准化的 ARIA 标签
  * Generate standardized ARIA labels for interactive elements
  */
-export function generateAriaLabel({ 
-  baseLabel, 
-  currentState, 
-  isActive, 
-  context 
+export function generateAriaLabel({
+  baseLabel,
+  currentState,
+  isActive,
+  context,
 }: AriaLabelOptions): string {
   let label = baseLabel;
-  
+
   if (context) {
     label = `${context}：${label}`;
   }
-  
+
   if (currentState) {
     label += `，${currentState}`;
   }
-  
+
   if (isActive !== undefined) {
-    label += isActive ? '，已选择' : '';
+    label += isActive ? "，已选择" : "";
   }
-  
+
   return label;
 }
 
@@ -48,61 +48,61 @@ export function generateAriaLabel({
 export const AccessibilityLabels = {
   // 按钮操作
   buttons: {
-    confirm: '确认',
-    cancel: '取消',
-    close: '关闭',
-    edit: '编辑',
-    delete: '删除',
-    submit: '提交',
-    send: '发送',
-    interrupt: '停止生成',
-    like: '点赞',
-    dislike: '点踩',
-    share: '分享',
-    copy: '复制',
+    confirm: "确认",
+    cancel: "取消",
+    close: "关闭",
+    edit: "编辑",
+    delete: "删除",
+    submit: "提交",
+    send: "发送",
+    interrupt: "停止生成",
+    like: "点赞",
+    dislike: "点踩",
+    share: "分享",
+    copy: "复制",
   },
-  
+
   // 状态描述
   states: {
-    selected: '已选择',
-    pressed: '已按下',
-    expanded: '已展开',
-    collapsed: '已收起',
-    loading: '加载中',
-    disabled: '已禁用',
-    required: '必填项',
-    optional: '选填项',
+    selected: "已选择",
+    pressed: "已按下",
+    expanded: "已展开",
+    collapsed: "已收起",
+    loading: "加载中",
+    disabled: "已禁用",
+    required: "必填项",
+    optional: "选填项",
   },
-  
+
   // 内容区域
   regions: {
-    navigation: '导航',
-    main: '主要内容',
-    sidebar: '侧边栏',
-    toolbar: '工具栏',
-    form: '表单',
-    dialog: '对话框',
-    menu: '菜单',
+    navigation: "导航",
+    main: "主要内容",
+    sidebar: "侧边栏",
+    toolbar: "工具栏",
+    form: "表单",
+    dialog: "对话框",
+    menu: "菜单",
   },
-  
+
   // 交互提示
   interactions: {
-    clickToEdit: '点击编辑',
-    clickToExpand: '点击展开',
-    clickToCollapse: '点击收起',
-    pressEnterOrSpace: '按 Enter 或空格键激活',
-    dragAndDrop: '拖拽文件到此区域',
+    clickToEdit: "点击编辑",
+    clickToExpand: "点击展开",
+    clickToCollapse: "点击收起",
+    pressEnterOrSpace: "按 Enter 或空格键激活",
+    dragAndDrop: "拖拽文件到此区域",
   },
-  
+
   // 反馈相关
   feedback: {
     difficulty: {
-      table: '表格难易度',
-      question: '提问难易度',
+      table: "表格难易度",
+      question: "提问难易度",
     },
-    type: '提问类型',
-    tags: '反馈标签',
-    comment: '反馈详细说明',
+    type: "提问类型",
+    tags: "反馈标签",
+    comment: "反馈详细说明",
   },
 } as const;
 
@@ -112,7 +112,7 @@ export const AccessibilityLabels = {
  */
 export function createKeyboardHandler(callback: () => void) {
   return (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       callback();
     }
@@ -125,12 +125,12 @@ export function createKeyboardHandler(callback: () => void) {
  */
 export function getToggleAriaProps(isToggled: boolean, label: string) {
   return {
-    role: 'button' as const,
+    role: "button" as const,
     tabIndex: 0,
-    'aria-pressed': isToggled,
-    'aria-label': generateAriaLabel({ 
-      baseLabel: label, 
-      isActive: isToggled 
+    "aria-pressed": isToggled,
+    "aria-label": generateAriaLabel({
+      baseLabel: label,
+      isActive: isToggled,
     }),
   };
 }
@@ -141,9 +141,9 @@ export function getToggleAriaProps(isToggled: boolean, label: string) {
  */
 export function getExpandableAriaProps(isExpanded: boolean, contentLabel: string) {
   return {
-    role: 'button' as const,
+    role: "button" as const,
     tabIndex: 0,
-    'aria-expanded': isExpanded,
-    'aria-label': `${isExpanded ? '收起' : '展开'}${contentLabel}`,
+    "aria-expanded": isExpanded,
+    "aria-label": `${isExpanded ? "收起" : "展开"}${contentLabel}`,
   };
 }

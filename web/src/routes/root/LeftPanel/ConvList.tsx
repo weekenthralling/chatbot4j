@@ -22,9 +22,7 @@ const ConvList = ({
     return (
       <div className="mt-[50%]">
         <EmptyChatListIcon className="w-[125px] h-[112px]" />
-        <div className="text-sm text-[#909399] mt-4 text-center">
-          暂无历史对话
-        </div>
+        <div className="text-sm text-[#909399] mt-4 text-center">暂无历史对话</div>
       </div>
     );
   }
@@ -38,13 +36,7 @@ const ConvList = ({
         dataLength={conversationCount}
         next={onLoadMore}
         hasMore={hasMore}
-        loader={
-          <Skeleton
-            paragraph={{ rows: 1 }}
-            active
-            style={{ padding: "10px" }}
-          />
-        }
+        loader={<Skeleton paragraph={{ rows: 1 }} active style={{ padding: "10px" }} />}
         endMessage={null}
         scrollableTarget="scrollableDiv"
         scrollThreshold={0.9}

@@ -8,7 +8,6 @@ import Conversation, { loader as convLoader } from "@/routes/conversation";
 import Root, { loader as rootLoader } from "@/routes/root";
 import Share, { loader as shareLoader } from "@/routes/share";
 
-
 function App() {
   const router = createBrowserRouter([
     {
@@ -33,7 +32,7 @@ function App() {
           shouldRevalidate: ({ currentParams, nextParams }) => {
             // prevent revalidating when clicking on the same conv
             return currentParams.id !== nextParams.id;
-          }
+          },
         },
       ],
     },

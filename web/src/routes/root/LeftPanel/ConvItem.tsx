@@ -145,14 +145,7 @@ const ConvItem = ({
         onClick: deleteConv,
       },
     ],
-    [
-      item.pinned,
-      handlePin,
-      handleUnpin,
-      handleUpdateClick,
-      shareConv,
-      deleteConv,
-    ],
+    [item.pinned, handlePin, handleUnpin, handleUpdateClick, shareConv, deleteConv],
   );
 
   return (
@@ -168,10 +161,7 @@ const ConvItem = ({
       `}
     >
       {titleEditing ? (
-        <form
-          className="flex items-center w-full h-full"
-          onSubmit={handleRename}
-        >
+        <form className="flex items-center w-full h-full" onSubmit={handleRename}>
           <input
             id="title-input"
             // IMPORTANT: need to set `min-w-0` or it will squash the space for buttons on the right.

@@ -13,7 +13,7 @@ export interface CursorPage<T> {
   current_page_backwards?: string;
   previous_page?: string;
   next_page?: string;
-};
+}
 
 export interface UserInfo {
   userid: string;

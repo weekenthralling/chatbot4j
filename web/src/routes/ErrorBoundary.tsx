@@ -1,10 +1,5 @@
 import { useEffect } from "react";
-import {
-  useRouteError,
-  useNavigate,
-  useLocation,
-  isRouteErrorResponse,
-} from "react-router";
+import { useRouteError, useNavigate, useLocation, isRouteErrorResponse } from "react-router";
 import { Result } from "antd";
 import { CircleAlert, History, House, RotateCw } from "lucide-react";
 
@@ -247,9 +242,7 @@ const ErrorBoundary = () => {
       {/* Footer - now responsive and not fixed */}
       <footer className="border-t border-border-secondary py-4">
         <div className="px-4 text-center">
-          <p className="text-xs text-text-muted">
-            {ERROR_MESSAGES.labels.copyright}
-          </p>
+          <p className="text-xs text-text-muted">{ERROR_MESSAGES.labels.copyright}</p>
         </div>
       </footer>
     </div>

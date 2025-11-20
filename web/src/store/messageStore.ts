@@ -3,7 +3,6 @@ import { isNil } from "lodash";
 import { HumanMessageDTO, MessageDTO } from "@/request/types";
 import { groupMessages } from "@/utils/messages";
 
-
 // 定义 store 的类型
 interface MessageState {
   messages: any[];
@@ -18,8 +17,7 @@ interface MessageState {
 export const useMessageStore = create<MessageState>()((set) => ({
   messages: [],
   preSendMessage: undefined,
-  setMessagesData: (messages) =>
-    set(() => ({ messages: groupMessages(messages ?? []) })),
+  setMessagesData: (messages) => set(() => ({ messages: groupMessages(messages ?? []) })),
   updateOrAddMessage: (message) => {
     const currentMessages = useMessageStore.getState().messages;
     const messages = [...currentMessages];
@@ -38,9 +36,7 @@ export const useMessageStore = create<MessageState>()((set) => ({
       return;
     }
     // Else, find the corresponding parent group.
-    const groupMatchIndex = messages.findLastIndex(
-      (group) => group.id === parent_id,
-    );
+    const groupMatchIndex = messages.findLastIndex((group) => group.id === parent_id);
     // If the parent group is not found, create a new group.
     if (groupMatchIndex === -1) {
       set(() => ({
@@ -116,9 +112,7 @@ export const useMessageStore = create<MessageState>()((set) => ({
     }
 
     // Else, find the corresponding parent group.
-    const groupMatchIndex = messages.findLastIndex(
-      (group) => group.id === parent_id,
-    );
+    const groupMatchIndex = messages.findLastIndex((group) => group.id === parent_id);
 
     // If the parent group is not found, create a new group.
     if (groupMatchIndex === -1) {
@@ -194,16 +188,11 @@ export const useMessageStore = create<MessageState>()((set) => ({
     const groupMatch = messages[groupMatchIndex];
 
     // 过滤掉要删除的消息
-    const filteredMessages = groupMatch.messages.filter(
-      (message: MessageDTO) => message.id !== id,
-    );
+    const filteredMessages = groupMatch.messages.filter((message: MessageDTO) => message.id !== id);
     if (filteredMessages.length === 0) {
       // 如果组内没有剩余消息，删除整个组
       set(() => ({
-        messages: [
-          ...messages.slice(0, groupMatchIndex),
-          ...messages.slice(groupMatchIndex + 1),
-        ],
+        messages: [...messages.slice(0, groupMatchIndex), ...messages.slice(groupMatchIndex + 1)],
       }));
     } else {
       set(() => ({

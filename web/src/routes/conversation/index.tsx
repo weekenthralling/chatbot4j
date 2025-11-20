@@ -62,9 +62,7 @@ const Chatbox = () => {
   const chatLogContainerRef = useRef<HTMLDivElement>(null);
   const chatLogRef = useRef<HTMLDivElement>(null);
   const shouldAutoScroll = useRef(true);
-  const [uploadFileList, setUploadFileList] = useState<UploadProps["fileList"]>(
-    [],
-  );
+  const [uploadFileList, setUploadFileList] = useState<UploadProps["fileList"]>([]);
 
   // Keep track of current request for cancellation
   const eventSourceRef = useRef<AbortController | null>(null);
@@ -107,9 +105,7 @@ const Chatbox = () => {
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to send message: ${response.status} ${response.statusText}`,
-        );
+        throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
       }
 
       if (!response.body) {
@@ -198,10 +194,7 @@ const Chatbox = () => {
           setAnswering(false);
           break;
         }
-        if (
-          isObject(message.content) &&
-          message.content.type === "title-generated"
-        ) {
+        if (isObject(message.content) && message.content.type === "title-generated") {
           updateConv({
             id: conv.id,
             title: message.content.payload,
@@ -399,11 +392,7 @@ const Chatbox = () => {
   }, [uploadFileList]);
 
   return (
-    <div
-      id="chatbox"
-      ref={chatLogContainerRef}
-      className="overflow-y-auto h-full"
-    >
+    <div id="chatbox" ref={chatLogContainerRef} className="overflow-y-auto h-full">
       <div
         id="chatlog"
         ref={chatLogRef}
@@ -430,11 +419,7 @@ const Chatbox = () => {
           ${contentContainerClasses}
         `}
       >
-        <ChatInput
-          receiving={answering}
-          onSend={handleSend}
-          onInterrupt={handleInterrupt}
-        />
+        <ChatInput receiving={answering} onSend={handleSend} onInterrupt={handleInterrupt} />
       </div>
     </div>
   );

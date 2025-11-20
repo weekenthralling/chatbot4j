@@ -59,8 +59,8 @@ const Index = () => {
         h-full w-full
       "
       // onDragEnter={(e) => {
-        // e.preventDefault();
-        // setDragOver(true);
+      // e.preventDefault();
+      // setDragOver(true);
       // }}
     >
       <div

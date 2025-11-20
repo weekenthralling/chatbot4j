@@ -16,6 +16,8 @@ const ToolMessage = ({
   convId: string;
   defaultOpen?: boolean;
 }) => {
+  const [openCode, setOpenCode] = useState(defaultOpen);
+
   if (
     message.type === "ToolMessageChunk" &&
     (message.content === undefined ||
@@ -34,14 +36,10 @@ const ToolMessage = ({
         >
           <LoaderCircle className="text-[11px] dark:text-[#1df252] animate-spin" />
         </div>
-        <span className="text-[13px] font-semibold dark:text-[#1df252]">
-          运行中...
-        </span>
+        <span className="text-[13px] font-semibold dark:text-[#1df252]">运行中...</span>
       </div>
     );
   }
-
-  const [openCode, setOpenCode] = useState(defaultOpen);
 
   const combinedText = Array.isArray(message.content)
     ? message.content
@@ -110,11 +108,7 @@ const ToolMessage = ({
       {/* 图片内容不受 openCode 控制 */}
       {Array.isArray(message.content) &&
         message.content.map((item: any, index: number) => {
-          if (
-            typeof item === "object" &&
-            item !== null &&
-            item.type === "image_url"
-          ) {
+          if (typeof item === "object" && item !== null && item.type === "image_url") {
             return (
               <div className="max-w-full mt-3" key={index}>
                 <Image

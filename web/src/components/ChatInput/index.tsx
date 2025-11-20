@@ -12,13 +12,7 @@ type IconButtonProps = ComponentProps<"button"> & {
   label: string;
   title?: string;
 };
-const IconButton = ({
-  icon,
-  label,
-  title,
-  className,
-  ...rest
-}: IconButtonProps) => {
+const IconButton = ({ icon, label, title, className, ...rest }: IconButtonProps) => {
   return (
     <button
       {...rest}
@@ -125,11 +119,7 @@ const ChatInput = ({
                     focus:outline-none
                     overflow-auto
                 `}
-        placeholder={
-          receiving
-            ? "ChatBot正在运行…"
-            : "请在此输入你想说的话，点击 Enter 键发送"
-        }
+        placeholder={receiving ? "ChatBot正在运行…" : "请在此输入你想说的话，点击 Enter 键发送"}
         aria-label="消息输入框"
         aria-describedby="chat-input-help"
         onKeyDown={handleKeyDown}
@@ -139,9 +129,9 @@ const ChatInput = ({
           <IconButton
             className="bg-transparent"
             onClick={(e) => {
-							e.preventDefault();
-							onInterrupt?.();
-						}}
+              e.preventDefault();
+              onInterrupt?.();
+            }}
             icon={<StopIcon />}
             label={AccessibilityLabels.buttons.interrupt}
             title={AccessibilityLabels.buttons.interrupt}

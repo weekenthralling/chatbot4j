@@ -13,13 +13,7 @@ import {
 
 import FeedbackCard from "./FeedbackCard";
 
-const MessageToolBar = ({
-  message,
-  conv_id,
-}: {
-  message: AIMessageDTO;
-  conv_id: string;
-}) => {
+const MessageToolBar = ({ message, conv_id }: { message: AIMessageDTO; conv_id: string }) => {
   const [feeback, setFeedback] = useState<FeedbackRating>(
     message.additional_kwargs?.feedback?.rating,
   );
@@ -67,17 +61,10 @@ const MessageToolBar = ({
               hover:text-[var(--color-text-success)]"
             onClick={handleThumbsUp}
             onKeyDown={createKeyboardHandler(handleThumbsUp)}
-            {...getToggleAriaProps(
-              feeback === "thumbsUp",
-              AccessibilityLabels.buttons.like,
-            )}
+            {...getToggleAriaProps(feeback === "thumbsUp", AccessibilityLabels.buttons.like)}
           >
             {feeback === "thumbsUp" ? (
-              <ThumbsUp
-                className="w-4 h-4"
-                fill="var(--color-confirm)"
-                strokeWidth={0}
-              />
+              <ThumbsUp className="w-4 h-4" fill="var(--color-confirm)" strokeWidth={0} />
             ) : (
               <ThumbsUp className="w-4 h-4" />
             )}
@@ -102,17 +89,10 @@ const MessageToolBar = ({
               hover:text-[var(--color-text-success)]"
             onClick={handleThumbsDown}
             onKeyDown={createKeyboardHandler(handleThumbsDown)}
-            {...getToggleAriaProps(
-              feeback === "thumbsDown",
-              AccessibilityLabels.buttons.dislike,
-            )}
+            {...getToggleAriaProps(feeback === "thumbsDown", AccessibilityLabels.buttons.dislike)}
           >
             {feeback === "thumbsDown" ? (
-              <ThumbsDown
-                className="w-4 h-4"
-                fill="var(--color-confirm)"
-                strokeWidth={0}
-              />
+              <ThumbsDown className="w-4 h-4" fill="var(--color-confirm)" strokeWidth={0} />
             ) : (
               <ThumbsDown className="w-4 h-4" />
             )}

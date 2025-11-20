@@ -30,11 +30,7 @@ const Share = () => {
   }, [sharedMessages, shareContainerRef.current]);
 
   return (
-    <div
-      id="share-container"
-      ref={shareContainerRef}
-      className="flex flex-col h-screen"
-    >
+    <div id="share-container" ref={shareContainerRef} className="flex flex-col h-screen">
       <header className="flex h-[92px] p-5">
         <LogoIcon className="h-12 w-auto" />
         <div className="ml-68">
@@ -49,13 +45,7 @@ const Share = () => {
       <main id="chat-log" className="flex-1 overflow-auto">
         <div className={`${contentContainerClasses}`}>
           {sharedMessages.map((group: any, index: number) => {
-            return (
-              <GroupedMessage
-                key={index}
-                children={group.messages}
-                frozen={true}
-              />
-            );
+            return <GroupedMessage key={index} children={group.messages} frozen={true} />;
           })}
         </div>
       </main>

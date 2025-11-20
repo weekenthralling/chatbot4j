@@ -3,11 +3,7 @@ import { Outlet, useLoaderData, useParams } from "react-router";
 import { App } from "antd";
 import BgImage from "@/assets/icons/bg.png?url";
 
-import {
-  setCheckedModel,
-  setModels,
-  useModelsStore,
-} from "@/store/modelsStore";
+import { setCheckedModel, setModels, useModelsStore } from "@/store/modelsStore";
 import { setUserInfo } from "@/store/userStore";
 import { setSettings, useSettingStore } from "@/store/settingStore";
 import MyShares from "@/components/MyShares";
@@ -53,10 +49,7 @@ function Root() {
     setModels(models);
 
     // Set default model if none selected or current model not in list
-    if (
-      !currentModel?.name ||
-      !models.find((item: ModelDTO) => item.name === currentModel.name)
-    ) {
+    if (!currentModel?.name || !models.find((item: ModelDTO) => item.name === currentModel.name)) {
       if (models.length > 0) {
         setCheckedModel(models[0]);
       }

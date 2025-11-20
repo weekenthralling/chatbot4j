@@ -25,9 +25,7 @@ const FeedbackCard = ({
 
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [tableDiffLevel, setTableDiffLevel] = useState<string | undefined>();
-  const [questionDiffLevel, setQuestionDiffLevel] = useState<
-    string | undefined
-  >();
+  const [questionDiffLevel, setQuestionDiffLevel] = useState<string | undefined>();
   const [questionType, setQuestionType] = useState<string | undefined>();
   const [otherFeedback, setOtherFeedback] = useState("");
   const tagList = [
@@ -85,9 +83,7 @@ const FeedbackCard = ({
   useEffect(() => {
     if (message?.additional_kwargs?.feedback?.comment) {
       const commentArr = message.additional_kwargs.feedback.comment.split(",");
-      const InputValueArr = commentArr.filter(
-        (item: string) => !tagList.includes(item),
-      );
+      const InputValueArr = commentArr.filter((item: string) => !tagList.includes(item));
       const checkTags = tagList.filter((tag) => commentArr.includes(tag));
       if (InputValueArr.length && !checkTags.includes("其他")) {
         checkTags.push("其他");
@@ -125,14 +121,10 @@ const FeedbackCard = ({
                   ${tableDiffLevel === item.value ? "bg-[#EFFAFF] text-[#00A0E9] border-[#C2ECFF]" : "bg-[#F6F6F6] border-[#DCDFE6] hover:bg-[#EFFAFF] hover:text-[#00A0E9]"}
                 `}
                 onClick={() =>
-                  setTableDiffLevel(
-                    tableDiffLevel !== item.value ? item.value : undefined,
-                  )
+                  setTableDiffLevel(tableDiffLevel !== item.value ? item.value : undefined)
                 }
                 onKeyDown={createKeyboardHandler(() =>
-                  setTableDiffLevel(
-                    tableDiffLevel !== item.value ? item.value : undefined,
-                  ),
+                  setTableDiffLevel(tableDiffLevel !== item.value ? item.value : undefined),
                 )}
                 {...getToggleAriaProps(
                   tableDiffLevel === item.value,
@@ -160,16 +152,12 @@ const FeedbackCard = ({
                   ${questionDiffLevel === item.value ? "bg-[#EFFAFF] text-[#00A0E9] border-[#C2ECFF]" : "bg-[#F6F6F6] border-[#DCDFE6] hover:bg-[#EFFAFF] hover:text-[#00A0E9]"}
                 `}
                 onClick={() =>
-                  setQuestionDiffLevel(
-                    questionDiffLevel !== item.value ? item.value : undefined,
-                  )
+                  setQuestionDiffLevel(questionDiffLevel !== item.value ? item.value : undefined)
                 }
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setQuestionDiffLevel(
-                      questionDiffLevel !== item.value ? item.value : undefined,
-                    );
+                    setQuestionDiffLevel(questionDiffLevel !== item.value ? item.value : undefined);
                   }
                 }}
                 role="button"
@@ -199,16 +187,12 @@ const FeedbackCard = ({
                   ${questionType === item.value ? "bg-[#EFFAFF] text-[#00A0E9] border-[#C2ECFF]" : "bg-[#F6F6F6] border-[#DCDFE6] hover:bg-[#EFFAFF] hover:text-[#00A0E9]"}
                 `}
                 onClick={() =>
-                  setQuestionType(
-                    questionType !== item.value ? item.value : undefined,
-                  )
+                  setQuestionType(questionType !== item.value ? item.value : undefined)
                 }
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setQuestionType(
-                      questionType !== item.value ? item.value : undefined,
-                    );
+                    setQuestionType(questionType !== item.value ? item.value : undefined);
                   }
                 }}
                 role="button"
@@ -265,10 +249,7 @@ const FeedbackCard = ({
       <div className="flex justify-end mt-2">
         <button
           onClick={handleSubmit}
-          disabled={
-            !activeTags.length ||
-            (activeTags.includes("其他") && !otherFeedback)
-          }
+          disabled={!activeTags.length || (activeTags.includes("其他") && !otherFeedback)}
           className="
             h-8 flex items-center justify-center px-4
             text-[#606266] border-[#DCDFE6] border text-[14px] font-semibold
@@ -279,8 +260,7 @@ const FeedbackCard = ({
             disabled:cursor-not-allowed
           "
           aria-label={
-            !activeTags.length ||
-            (activeTags.includes("其他") && !otherFeedback)
+            !activeTags.length || (activeTags.includes("其他") && !otherFeedback)
               ? "请选择反馈标签或填写其他反馈"
               : "提交反馈"
           }

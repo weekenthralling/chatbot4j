@@ -6,9 +6,7 @@ import { FileMeta } from "@/request/types";
 import { ellipsisInMiddle } from "@/utils/strings";
 import CsvIcon from "@/assets/icons/csv_icon.svg?react";
 
-
-const CsvCard = ({ file, fromMe = false }: { file: FileMeta, fromMe?: boolean }) => {
-
+const CsvCard = ({ file, fromMe = false }: { file: FileMeta; fromMe?: boolean }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const handleDownload = async () => {
@@ -50,7 +48,9 @@ const CsvCard = ({ file, fromMe = false }: { file: FileMeta, fromMe?: boolean })
         filename={file.filename}
         previewUrl={file.url}
         open={previewOpen}
-        onClose={() => { setPreviewOpen(false) }}
+        onClose={() => {
+          setPreviewOpen(false);
+        }}
       />
     </div>
   );
