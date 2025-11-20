@@ -6,10 +6,8 @@ import { createKeyboardHandler } from "@/utils/accessibility";
 import DeepThink from "@/assets/icons/deep_think.svg?react";
 
 import MarkdownContent from "./MarkdownContent";
-// import ToolCall from "./ToolCall";
 
 type OpenConfig = {
-  toolCalls?: boolean;
   thinking?: boolean;
   // future: image, chart, reference...
 };
