@@ -71,6 +71,11 @@ public class ChatMessage {
     private String content;
 
     /**
+     * The reasoning/thinking process of the AI (if any).
+     */
+    private String reasoning;
+
+    /**
      * Additional keyword arguments for the message.
      */
     @JsonProperty("additional_kwargs")
@@ -84,6 +89,7 @@ public class ChatMessage {
             @JsonProperty("send_at") Instant sendAt,
             @JsonProperty("type") String type,
             @JsonProperty("content") String content,
+            @JsonProperty("reasoning") String reasoning,
             @JsonProperty("additional_kwargs") Map<String, Object> additionalKwargs) {
         this.id = id;
         this.parentId = parentId;
@@ -91,6 +97,7 @@ public class ChatMessage {
         this.sendAt = sendAt;
         this.type = type;
         this.content = content;
+        this.reasoning = reasoning;
         this.additionalKwargs = additionalKwargs;
     }
 
@@ -115,9 +122,15 @@ public class ChatMessage {
                                 "arguments", tool.arguments()))
                         .toList();
 
+                // Use text directly as content
+                String content = aiMessage.text() != null ? aiMessage.text() : "";
+                // Use thinking directly as reasoning
+                String reasoning = aiMessage.thinking() != null ? aiMessage.thinking() : "";
+
                 // Map<String, Object> attributes = aiMessage.attributes();
                 return ChatMessage.builder()
-                        .content(aiMessage.text())
+                        .content(content)
+                        .reasoning(reasoning) // Store thinking in reasoning field
                         .type("ai")
                         // .id(attributes.get("id").toString())
                         // .parentId(attributes.get("parentId").toString())

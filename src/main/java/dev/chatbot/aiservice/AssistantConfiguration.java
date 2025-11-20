@@ -83,6 +83,7 @@ public class AssistantConfiguration {
                 .temperature(llmProperties.getTemperature())
                 .topP(llmProperties.getTopP())
                 .maxTokens(llmProperties.getMaxTokens())
+                .returnThinking(true)
                 .listeners(listeners)
                 .build();
     }
