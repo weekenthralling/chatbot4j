@@ -56,8 +56,8 @@ public class ChatMessage {
      * The timestamp when the message was sent.
      * Note: This field may be unused now.
      */
-    @JsonProperty("send_at")
-    private Instant sendAt;
+    @JsonProperty("sent_at")
+    private Instant sentAt;
 
     /**
      * The type of the message, e.g., "human", "ai", etc.
@@ -86,7 +86,7 @@ public class ChatMessage {
             @JsonProperty("id") String id,
             @JsonProperty("parent_id") String parentId,
             @JsonProperty("from") String from,
-            @JsonProperty("send_at") Instant sendAt,
+            @JsonProperty("sent_at") Instant sentAt,
             @JsonProperty("type") String type,
             @JsonProperty("content") String content,
             @JsonProperty("reasoning") String reasoning,
@@ -94,7 +94,7 @@ public class ChatMessage {
         this.id = id;
         this.parentId = parentId;
         this.from = from;
-        this.sendAt = sendAt;
+        this.sentAt = sentAt;
         this.type = type;
         this.content = content;
         this.reasoning = reasoning;

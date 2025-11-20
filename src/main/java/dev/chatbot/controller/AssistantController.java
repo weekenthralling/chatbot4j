@@ -64,7 +64,7 @@ public class AssistantController {
                                 .parentId(message.getId())
                                 .type("AIMessageChunk")
                                 .from("ai")
-                                .sendAt(Instant.now())
+                                .sentAt(Instant.now())
                                 .content(token)
                                 .build();
                         sink.next(toJson(partialMessage));
@@ -75,7 +75,7 @@ public class AssistantController {
                                 .parentId(message.getId())
                                 .type("AIMessageChunk")
                                 .from("ai")
-                                .sendAt(Instant.now())
+                                .sentAt(Instant.now())
                                 .reasoning(partialThinking.text())
                                 .content("") // Empty content when only thinking
                                 .build();
@@ -90,7 +90,7 @@ public class AssistantController {
                                 .id(runId)
                                 .parentId(message.getId())
                                 .type("error")
-                                .sendAt(Instant.now())
+                                .sentAt(Instant.now())
                                 .content("An error occurred: " + error.getMessage())
                                 .build();
                         sink.next(toJson(errorMessage));
