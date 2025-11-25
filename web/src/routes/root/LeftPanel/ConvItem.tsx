@@ -17,6 +17,7 @@ import { updateConvOnServer } from "@/request/conv";
 import { ConversationDTO } from "@/request/types";
 import { updateConv, removeConv } from "@/store/convsStore";
 import { useGlobalMessage } from "@/contexts/MessageProvider";
+import { useSSEStore } from "@/store/sseStore";
 
 import { useDeleteConv } from "./hooks/useDeleteConv";
 import { useShareConv } from "./hooks/useShareConv";
@@ -36,6 +37,16 @@ const ConvItem = ({
   const active = convId === item.id;
   const navigate = useNavigate();
   const messageApi = useGlobalMessage();
+
+  // Get the answering state for this conversation - directly subscribe to the Map
+  const isAnswering = useSSEStore((state) => state.answeringStates.get(item.id) ?? false);
+  // Get the unread completion state
+  const hasUnreadCompletion = useSSEStore((state) => state.unreadCompletions.get(item.id) ?? false);
+
+  // Show loading icon only when conversation is answering but not active
+  const showLoadingIcon = isAnswering && !active;
+  // Show completion indicator when conversation has unread completion and is not active
+  const showCompletionIndicator = hasUnreadCompletion && !active;
 
   const [titleText, setTitleText] = useState(item.title);
 
@@ -218,6 +229,7 @@ const ConvItem = ({
             ${active ? "text-text-button" : "text-text-primary"}
             hover:text-text-button
             group/item
+            ${showLoadingIcon ? "relative" : ""}
           `}
         >
           <MessageSquareMore
@@ -231,64 +243,76 @@ const ConvItem = ({
           `}
           />
           <span className="flex-1 ml-2 text-sm truncate">{item.title}</span>
-          <Popover
-            placement="rightTop"
-            content={
-              <div role="menu">
-                {actions.map((action) => (
-                  <button
-                    key={action.name}
-                    className="
-                      flex items-center
-                      h-8
-                      min-w-30
-                      px-1 py-1
-                      text-text-primary hover:text-text-highlight
-                      hover:bg-bg-highlight
-                      rounded-md
-                      transition-colors
-                      focus:outline-none focus:bg-bg-highlight
-                    "
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      action.onClick?.(item);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
+
+          {/* Loading indicator when conversation is generating in background */}
+          {showLoadingIcon && <LoaderCircle className="w-4 h-4 mr-2 text-[#00A0E9] animate-spin" />}
+
+          {/* Completion indicator when conversation finished but not viewed */}
+          {showCompletionIndicator && (
+            <div className="w-2 h-2 mr-3 rounded-full bg-[#00A0E9]" aria-label="未读回复" />
+          )}
+
+          {/* Show ellipsis menu only when not showing loading icon or completion indicator */}
+          {!showLoadingIcon && !showCompletionIndicator && (
+            <Popover
+              placement="rightTop"
+              content={
+                <div role="menu">
+                  {actions.map((action) => (
+                    <button
+                      key={action.name}
+                      className="
+                        flex items-center
+                        h-8
+                        min-w-30
+                        px-1 py-1
+                        text-text-primary hover:text-text-highlight
+                        hover:bg-bg-highlight
+                        rounded-md
+                        transition-colors
+                        focus:outline-none focus:bg-bg-highlight
+                      "
+                      onClick={(e) => {
+                        e.stopPropagation();
                         action.onClick?.(item);
-                      }
-                    }}
-                    role="menuitem"
-                    tabIndex={0}
-                    aria-label={action.name}
-                  >
-                    {action.icon}
-                    <span className="ml-3">{action.name}</span>
-                  </button>
-                ))}
-              </div>
-            }
-            arrow={false}
-            classNames={{
-              body: "rounded-md",
-            }}
-          >
-            <button
-              className="
-                flex items-center justify-center
-                w-4 h-4
-                ml-auto mr-2
-                text-[16px] text-[var(--color-text-muted)] hover:text-text-button
-                bg-transparent
-                rounded-md
-                group-hover/item:opacity-100
-              "
-              onClick={(e) => e.preventDefault()}
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          action.onClick?.(item);
+                        }
+                      }}
+                      role="menuitem"
+                      tabIndex={0}
+                      aria-label={action.name}
+                    >
+                      {action.icon}
+                      <span className="ml-3">{action.name}</span>
+                    </button>
+                  ))}
+                </div>
+              }
+              arrow={false}
+              classNames={{
+                body: "rounded-md",
+              }}
             >
-              <EllipsisVertical />
-            </button>
-          </Popover>
+              <button
+                className="
+                  flex items-center justify-center
+                  w-4 h-4
+                  ml-auto mr-2
+                  text-[16px] text-[var(--color-text-muted)] hover:text-text-button
+                  bg-transparent
+                  rounded-md
+                  group-hover/item:opacity-100
+                "
+                onClick={(e) => e.preventDefault()}
+              >
+                <EllipsisVertical />
+              </button>
+            </Popover>
+          )}
         </NavLink>
       )}
     </div>

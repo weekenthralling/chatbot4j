@@ -13,6 +13,8 @@ import { moveTopByConvId, updateConv } from "@/store/convsStore";
 import {
   appendOrAddMessage,
   deleteMessage,
+  hasMessages,
+  setActiveConv,
   setMessagesData,
   setPreSendMessage,
   updateOrAddMessage,
@@ -21,6 +23,7 @@ import {
 import { useModelsStore } from "@/store/modelsStore";
 import { useUserStore } from "@/store/userStore";
 import { useGlobalNotification } from "@/contexts/NotificationProvider";
+import { useSSEStore } from "@/store/sseStore";
 
 export async function loader({ params }: any): Promise<ConversationDTO> {
   const id = params.id;
@@ -58,14 +61,22 @@ const Chatbox = () => {
   const preSendMessage = useMessageStore((state) => state.preSendMessage);
   const checkedModel = useModelsStore((state) => state.checkedModel);
   const { contentContainerClasses } = useChatLayout();
-  const [answering, setAnswering] = useState(false);
   const chatLogContainerRef = useRef<HTMLDivElement>(null);
   const chatLogRef = useRef<HTMLDivElement>(null);
   const shouldAutoScroll = useRef(true);
   const [uploadFileList, setUploadFileList] = useState<UploadProps["fileList"]>([]);
 
-  // Keep track of current request for cancellation
-  const eventSourceRef = useRef<AbortController | null>(null);
+  // Use global SSE store for managing connections across conversation switches
+  const {
+    setAnswering,
+    markAsCompleted,
+    clearUnreadCompletion,
+    addConnection,
+    removeConnection,
+    getConnection,
+  } = useSSEStore();
+  // Subscribe directly to answeringStates Map for reactivity
+  const answering = useSSEStore((state) => state.answeringStates.get(conv.id) ?? false);
 
   const notificationApi = useGlobalNotification();
 
@@ -80,21 +91,54 @@ const Chatbox = () => {
     });
   };
 
+  // Helper function to handle stream completion
+  const handleStreamComplete = (completedConvId: string) => {
+    setAnswering(completedConvId, false);
+    removeConnection(completedConvId);
+    const activeId = useSSEStore.getState().activeConvId;
+    if (completedConvId !== activeId) {
+      markAsCompleted(completedConvId);
+    }
+  };
+
   // Handle sending a message and starting an SSE stream using native fetch
   const sendMessageSSE = async (messageData: HumanMessageDTO) => {
+    const currentConvId = conv.id;
+
+    // Create a message handler that's bound to this specific conversation
+    const messageHandler = (message: any) => {
+      switch (message.type) {
+        case "human": // langchain's HumanMessage.type
+        case "ai": // langchain's AIMessage.type
+        case "tool": // langchain's ToolMessage.type
+          updateOrAddMessage(currentConvId, message);
+          moveTopByConvId(currentConvId);
+          break;
+        case "AIMessageChunk": // langchain's AIMessageChunk.type
+        case "ToolMessageChunk": // langchain's ToolMessageChunk.type
+          appendOrAddMessage(currentConvId, message);
+          break;
+        case "error":
+          showErrorNotification("发生错误", message.content);
+          handleStreamComplete(currentConvId);
+          break;
+        default:
+          console.warn(`Unknown message type: ${message.type}`);
+      }
+    };
+
     try {
-      // Close existing stream if any
-      if (eventSourceRef.current) {
-        eventSourceRef.current.abort();
-        eventSourceRef.current = null;
+      // Close existing stream for this conversation if any
+      const existingConnection = getConnection(currentConvId);
+      if (existingConnection) {
+        removeConnection(currentConvId);
       }
 
       // Create an AbortController for this request
       const abortController = new AbortController();
-      eventSourceRef.current = abortController;
 
       // Use native fetch for SSE handling with POST
-      const response = await fetch(`/api/${conv.id}/assistant`, {
+      const response = await fetch(`/api/${currentConvId}/assistant`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,12 +161,34 @@ const Chatbox = () => {
       const decoder = new TextDecoder();
       let buffer = "";
 
+      // Register the connection in global store with the message handler
+      // Note: addConnection will call removeConnection internally, which sets answering=false
+      addConnection(currentConvId, abortController, reader, messageHandler);
+
+      // Set answering state AFTER registering connection to avoid being overwritten
+      setAnswering(currentConvId, true);
+
       try {
         while (true) {
-          const { done, value } = await reader.read();
+          let readResult;
+          try {
+            readResult = await reader.read();
+          } catch (readError) {
+            // Handle abort or reader released error
+            if (
+              readError instanceof Error &&
+              (readError.name === "AbortError" || readError.message.includes("released"))
+            ) {
+              console.warn("Stream reading interrupted (conversation switched)");
+              break;
+            }
+            throw readError;
+          }
+
+          const { done, value } = readResult;
 
           if (done) {
-            setAnswering(false);
+            handleStreamComplete(currentConvId);
             break;
           }
 
@@ -142,13 +208,14 @@ const Chatbox = () => {
               // Handle special end event
               // the API returns the end event with the content `data: [DONE]` to signal the end of the stream.
               if (data === "[DONE]") {
-                setAnswering(false);
+                handleStreamComplete(currentConvId);
                 continue;
               }
 
               try {
                 const message = JSON.parse(data);
-                handleMessageEvent(message);
+                // Use the stored message handler for this conversation
+                messageHandler(message);
               } catch (parseError) {
                 console.warn("Failed to parse SSE message:", data, parseError);
               }
@@ -156,59 +223,22 @@ const Chatbox = () => {
           }
         }
       } finally {
-        reader.releaseLock();
+        // Safely release the reader if it hasn't been released yet
+        try {
+          reader.releaseLock();
+        } catch (e) {
+          // Reader may already be released, ignore
+        }
       }
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
-        console.log("Request was aborted");
+        console.warn("Request was aborted");
         return;
       }
 
       console.error("Error sending message:", error);
       showErrorNotification("发送失败", "消息发送失败，请重试");
-      setAnswering(false);
-    }
-  };
-
-  // Process incoming SSE messages - keep the original message handling logic
-  // MessageDTO is not complete so we use any for now
-  const handleMessageEvent = (message: any) => {
-    switch (message.type) {
-      case "human": // langchain's HumanMessage.type
-      case "ai": // langchain's AIMessage.type
-      case "tool": // langchain's ToolMessage.type
-        updateOrAddMessage(message);
-        moveTopByConvId(conv.id!);
-        break;
-      case "AIMessageChunk": // langchain's AIMessageChunk.type
-      case "ToolMessageChunk": // langchain's ToolMessageChunk.type
-        appendOrAddMessage(message);
-        break;
-      // control messages
-      case "info":
-        if (message.content === "workflow/start") {
-          setAnswering(true);
-          break;
-        }
-        if (message.content === "workflow/end") {
-          setAnswering(false);
-          break;
-        }
-        if (isObject(message.content) && message.content.type === "title-generated") {
-          updateConv({
-            id: conv.id,
-            title: message.content.payload,
-          });
-          break;
-        }
-        console.log(`Unknown info message: ${message.content}`);
-        break;
-      case "error":
-        showErrorNotification("发生错误", message.content);
-        setAnswering(false);
-        break;
-      default:
-        console.log(`Unknown message type: ${message.type}`);
+      handleStreamComplete(currentConvId);
     }
   };
 
@@ -222,15 +252,25 @@ const Chatbox = () => {
       },
     };
 
-    updateOrAddMessage(toSend);
-    setAnswering(true);
+    updateOrAddMessage(conv.id, toSend);
+    setAnswering(conv.id, true);
     sendMessageSSE(toSend);
   }, 200) as any;
 
   // TODO: these useEffects are async, we need to consider if preSendMessage
   // is handled before we handle conv.messages
   useEffect(() => {
-    setMessagesData(conv.messages);
+    // Set this conversation as active
+    setActiveConv(conv.id);
+
+    // Clear unread completion status when user views this conversation
+    clearUnreadCompletion(conv.id);
+
+    // Only load messages from server if we don't have cached messages
+    // This prevents overwriting messages received in background
+    if (!hasMessages(conv.id)) {
+      setMessagesData(conv.id, conv.messages);
+    }
   }, [conv]);
 
   useEffect(() => {
@@ -241,15 +281,9 @@ const Chatbox = () => {
     }
   }, [preSendMessage]);
 
-  // Clean up SSE connection on unmount
-  useEffect(() => {
-    return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.abort();
-        eventSourceRef.current = null;
-      }
-    };
-  }, []);
+  // Note: We don't clean up SSE connections on unmount anymore
+  // They are managed globally and will continue running in background
+  // This allows switching conversations while messages are still being received
 
   // Set `shouldAutoScroll` when user scrolls the chat log.
   useEffect(() => {
@@ -316,7 +350,7 @@ const Chatbox = () => {
 
   const upload = async (files: File[]) => {
     // Immediately disable other operations after starting file upload
-    setAnswering(true);
+    setAnswering(conv.id, true);
     for (const file of files) {
       const fid = crypto.randomUUID();
       const uploading: HumanMessageDTO = {
@@ -338,7 +372,7 @@ const Chatbox = () => {
           model: checkedModel?.name,
         },
       };
-      updateOrAddMessage(uploading);
+      updateOrAddMessage(conv.id, uploading);
       const resp = await uploadFile(conv.id, file);
       const data = await resp.json();
       if (resp.ok) {
@@ -355,9 +389,9 @@ const Chatbox = () => {
         };
         // Send via fetch with SSE instead of separate request
         sendMessageSSE(uploaded);
-        updateOrAddMessage(uploaded);
+        updateOrAddMessage(conv.id, uploaded);
       } else {
-        deleteMessage({ id: fid });
+        deleteMessage(conv.id, { id: fid });
         showErrorNotification("上传失败", data.detail);
       }
       // Reset upload list after upload finished
@@ -367,23 +401,17 @@ const Chatbox = () => {
 
   const handleInterrupt = () => {
     try {
-      setAnswering(false);
+      setAnswering(conv.id, false);
 
       // Close the current SSE connection when interrupting
-      if (eventSourceRef.current) {
-        eventSourceRef.current.abort();
-        eventSourceRef.current = null;
-      }
-    } catch {
-      // TODO: add messageAPI just for this?
+      removeConnection(conv.id);
+    } catch (error) {
+      console.warn("Error interrupting:", error);
     }
   };
 
-  useEffect(() => {
-    if (answering && conv?.id) {
-      handleInterrupt();
-    }
-  }, [conv]);
+  // Removed: We no longer interrupt connections when switching conversations
+  // The SSE connections continue running in the background
 
   useEffect(() => {
     if (uploadFileList?.length) {
