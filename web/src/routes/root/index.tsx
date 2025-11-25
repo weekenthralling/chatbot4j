@@ -6,6 +6,7 @@ import BgImage from "@/assets/icons/bg.png?url";
 import { setCheckedModel, setModels, useModelsStore } from "@/store/modelsStore";
 import { setUserInfo } from "@/store/userStore";
 import { setSettings, useSettingStore } from "@/store/settingStore";
+import { useSSEStore } from "@/store/sseStore";
 import MyShares from "@/components/MyShares";
 import { ModelDTO, UserInfo } from "@/request/types";
 
@@ -43,6 +44,8 @@ function Root() {
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const settings = useSettingStore((state) => state.settings);
   const { id: convId } = useParams();
+  const { abortAll } = useSSEStore();
+
   // Initialize user and models data from loader
   useEffect(() => {
     setUserInfo(user);
@@ -55,6 +58,13 @@ function Root() {
       }
     }
   }, [user, models, currentModel]);
+
+  // Clean up all SSE connections when the entire app unmounts (e.g., page refresh, navigation away)
+  useEffect(() => {
+    return () => {
+      abortAll();
+    };
+  }, [abortAll]);
 
   const onRagToggle = (checked: boolean) => {
     if (checked) {
