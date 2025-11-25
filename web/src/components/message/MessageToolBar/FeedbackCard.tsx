@@ -46,7 +46,7 @@ const FeedbackCard = ({
 
     try {
       await feedbackToServer(conv_id, message.parent_id!, feedback);
-      updateOrAddMessage({
+      updateOrAddMessage(conv_id, {
         ...message,
         additional_kwargs: {
           ...message.additional_kwargs,
