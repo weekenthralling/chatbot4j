@@ -7,7 +7,7 @@ import remarkMath from "remark-math";
 
 import { useTheme } from "@/hooks/useTheme";
 
-const MarkdownContent = ({ title, text }: { title?: string; text: string }) => {
+const MarkdownContent = ({ text }: { title?: string; text: string }) => {
   const { codeTheme } = useTheme();
 
   return (
@@ -28,11 +28,25 @@ const MarkdownContent = ({ title, text }: { title?: string; text: string }) => {
             );
           }
           return (
-            <SyntaxHighlighter {...rest} PreTag="div" language={match[1]} style={codeTheme}>
-              {String(children).replace(/\n$/, "")}
-            </SyntaxHighlighter>
+            <div className="my-4">
+              <SyntaxHighlighter {...rest} PreTag="div" language={match[1]} style={codeTheme}>
+                {String(children).replace(/\n$/, "")}
+              </SyntaxHighlighter>
+            </div>
           );
         },
+        p: ({ children }) => <p className="my-3">{children}</p>,
+        ul: ({ children }) => <ul className="my-3 ml-4 list-disc">{children}</ul>,
+        ol: ({ children }) => <ol className="my-3 ml-4 list-decimal">{children}</ol>,
+        li: ({ children }) => <li className="my-1">{children}</li>,
+        h1: ({ children }) => <h1 className="text-xl font-bold my-4">{children}</h1>,
+        h2: ({ children }) => <h2 className="text-lg font-bold my-3">{children}</h2>,
+        h3: ({ children }) => <h3 className="text-base font-bold my-3">{children}</h3>,
+        blockquote: ({ children }) => (
+          <blockquote className="my-3 pl-4 border-l-4 border-gray-300 italic">
+            {children}
+          </blockquote>
+        ),
         table: ({ node, ...props }) => (
           <div className="w-full overflow-x-auto">
             <table
