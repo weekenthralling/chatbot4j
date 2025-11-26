@@ -1,0 +1,10 @@
+Based on the conversation provided, generate a concise and accurate title that captures the core topic or main intent of the dialogue.
+
+Requirements:
+1. The title must be clear, professional, and highly relevant to the main subject of the conversation.
+2. The title length must be strictly limited to **20** characters (including spaces and letters).
+3. Do not introduce any information not present in the conversation.
+4. Maintain a neutral and objective tone—no exaggeration or emotional wording.
+5. Use the same language to user.
+
+Output the final title only. Do not include explanations or numbering.

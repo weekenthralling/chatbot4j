@@ -170,7 +170,9 @@ public class ConversationController {
             messages = messagesFromJson(history.getMessage()).stream()
                     .map(ChatMessage::fromLC)
                     .filter(Objects::nonNull)
-                    .filter(message -> Objects.nonNull(message.getContent()))
+                    // Remove empty messages and messages with only new lines(functional messages)
+                    .filter(message -> Objects.nonNull(message.getContent())
+                            && !message.getContent().equals("\n\n"))
                     // TODO: chatbot only stream "human" and "ai" message now, so we just show these two types
                     // here. In the future, we may need to show other types of messages.
                     .filter(message -> Arrays.asList("human", "ai").contains(message.getType()))

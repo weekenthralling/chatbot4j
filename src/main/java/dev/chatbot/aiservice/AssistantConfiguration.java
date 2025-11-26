@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Scope;
 
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.web.search.WebSearchEngine;
@@ -62,6 +64,20 @@ public class AssistantConfiguration {
     }
 
     @Bean
+    ChatModel chatModel(StreamingChatModel streamingChatModel) {
+        return OpenAiChatModel.builder()
+                .baseUrl(llmProperties.getBaseUrl())
+                .apiKey(llmProperties.getApiKey())
+                .modelName(llmProperties.getModelName())
+                .temperature(llmProperties.getTemperature())
+                .topP(llmProperties.getTopP())
+                .maxTokens(llmProperties.getMaxTokens())
+                .returnThinking(true)
+                .listeners(listeners)
+                .build();
+    }
+
+    @Bean
     @Scope(SCOPE_PROTOTYPE)
     ChatMemoryProvider chatMemoryProvider() {
         return memoryId -> MessageWindowChatMemory.builder()
@@ -85,5 +101,11 @@ public class AssistantConfiguration {
                 .tools(toolkit)
                 .chatMemoryProvider(chatMemoryProvider)
                 .build();
+    }
+
+    @Bean
+    @Scope(SCOPE_PROTOTYPE)
+    SummaryAssistant summaryAssistant(ChatModel chatModel, ChatMemoryProvider chatMemoryProvider) {
+        return AiServices.builder(SummaryAssistant.class).chatModel(chatModel).build();
     }
 }
