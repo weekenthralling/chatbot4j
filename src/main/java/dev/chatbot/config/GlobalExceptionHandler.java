@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import dev.chatbot.exception.ForbiddenException;
 import dev.chatbot.exception.RecordNotFoundException;
 
 /**
@@ -35,6 +36,17 @@ public class GlobalExceptionHandler {
                     .append("; ");
         }
         return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * This method is used to handle the ForbiddenException.
+     *
+     * @param ex ForbiddenException
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<String> handleForbiddenException(ForbiddenException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     /**
