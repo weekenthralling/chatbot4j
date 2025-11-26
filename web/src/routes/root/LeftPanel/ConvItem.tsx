@@ -294,7 +294,7 @@ const ConvItem = ({
               }
               arrow={false}
               classNames={{
-                body: "rounded-md",
+                content: "rounded-md",
               }}
             >
               <button

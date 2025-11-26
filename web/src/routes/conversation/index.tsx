@@ -82,6 +82,7 @@ const Chatbox = () => {
 
   const showErrorNotification = (title: string, detail: string) => {
     notificationApi.error({
+      title,
       message: <div className="pt-1 pl-2 font-medium">{title}</div>,
       description: <div className="pl-2 text-text-secondary">{detail}</div>,
       duration: 5,

@@ -111,13 +111,7 @@ const ToolMessage = ({
           if (typeof item === "object" && item !== null && item.type === "image_url") {
             return (
               <div className="max-w-full mt-3" key={index}>
-                <Image
-                  width={200}
-                  src={item.image_url.url}
-                  preview={{
-                    title: "预览",
-                  }}
-                />
+                <Image width={200} src={item.image_url.url} preview />
               </div>
             );
           }
