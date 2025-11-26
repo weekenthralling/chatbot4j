@@ -119,6 +119,9 @@ const Chatbox = () => {
         case "ToolMessageChunk": // langchain's ToolMessageChunk.type
           appendOrAddMessage(currentConvId, message);
           break;
+        case "info":
+          updateConv({ id: currentConvId, title: message.content });
+          break;
         case "error":
           showErrorNotification("发生错误", message.content);
           handleStreamComplete(currentConvId);

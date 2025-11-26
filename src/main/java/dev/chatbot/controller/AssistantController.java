@@ -1,7 +1,10 @@
 package dev.chatbot.controller;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +22,14 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 
 import dev.chatbot.aiservice.StreamingAssistant;
+import dev.chatbot.aiservice.SummaryAssistant;
 import dev.chatbot.domain.Conversation;
 import dev.chatbot.dto.ChatMessage;
 import dev.chatbot.exception.ForbiddenException;
+import dev.chatbot.repository.ChatHistoryRepository;
 import dev.chatbot.service.ConversationService;
 
+import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 import static dev.chatbot.utils.Json.toJson;
@@ -44,7 +50,11 @@ public class AssistantController {
 
     private final StreamingAssistant assistant;
 
+    private final SummaryAssistant summaryAssistant;
+
     private final ConversationService conversationService;
+
+    private final ChatHistoryRepository chatHistoryRepository;
 
     @PostMapping(value = "/{conversationId}/assistant", produces = TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "Assistant API", description = "Get assistant response")
@@ -100,6 +110,25 @@ public class AssistantController {
                         sink.next(toJson(thinkMessage));
                     })
                     .onCompleteResponse(response -> {
+                        // After the main response is sent, trigger summarization if enabled
+                        var requireSummarization = message.getAdditionalKwargs().get("require_summarization");
+                        if (Boolean.TRUE.equals(requireSummarization)) {
+                            String title = this.summaryAssistant.summarize(chatMessages(sessionId));
+
+                            conversation.setTitle(title);
+                            this.conversationService.saveConversation(conversation);
+
+                            // Send the updated conversation with the new title
+                            ChatMessage summaryMessage = ChatMessage.builder()
+                                    .id(UUID.randomUUID().toString())
+                                    .type("info")
+                                    .from("ai")
+                                    .sentAt(Instant.now())
+                                    .content(title)
+                                    .build();
+                            sink.next(toJson(summaryMessage));
+                        }
+
                         sink.next("[DONE]");
                         sink.complete();
                     })
@@ -116,5 +145,31 @@ public class AssistantController {
                     })
                     .start();
         });
+    }
+
+    /**
+     * Retrieve chat messages for a given session ID and format them as a single
+     * string.
+     * @param sessionId the session ID
+     * @return the formatted chat messages
+     */
+    private String chatMessages(UUID sessionId) {
+        var chatHistory = this.chatHistoryRepository.findById(sessionId).orElse(null);
+        if (chatHistory == null) {
+            return "No conversation history.";
+        }
+        return messagesFromJson(chatHistory.getMessage()).stream()
+                .map(ChatMessage::fromLC)
+                .filter(Objects::nonNull)
+                .filter(message -> Objects.nonNull(message.getContent()))
+                .filter(message -> Arrays.asList("human", "ai").contains(message.getType()))
+                .map(message -> {
+                    return switch (message.getType()) {
+                        case "human" -> "Human: " + message.getContent();
+                        case "ai" -> "AI: " + message.getContent();
+                        default -> "";
+                    };
+                })
+                .collect(Collectors.joining("\n"));
     }
 }
