@@ -4043,7 +4043,7 @@ __metadata:
     react-dom: "npm:^19.2.0"
     react-infinite-scroll-component: "npm:^6.1.0"
     react-markdown: "npm:^10.1.0"
-    react-router: "npm:^7.10.0"
+    react-router: "npm:^7.11.0"
     react-syntax-highlighter: "npm:^16.1.0"
     react-window: "npm:^2.2.3"
     rehype-katex: "npm:^7.0.1"
@@ -8549,9 +8549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:^7.10.0":
-  version: 7.10.0
-  resolution: "react-router@npm:7.10.0"
+"react-router@npm:^7.11.0":
+  version: 7.11.0
+  resolution: "react-router@npm:7.11.0"
   dependencies:
     cookie: "npm:^1.0.1"
     set-cookie-parser: "npm:^2.6.0"
@@ -8561,7 +8561,7 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 10c0/233fb721f6297ae62557b26fc07d43087a8b4921f53cf2ac9e9971686b2853c0c49b5f8acb0160a49c815d5657b764dc2809d0131d062c3a634b5060e52c3d73
+  checksum: 10c0/eb3693d63d1c52221a3449de5db170e2fa9e00536b011998b17f8a277f8b5e89b752d104dbbeb4ee3d474f8e4570167db00293b4510f63277e5e6658c5dab22b
   languageName: node
   linkType: hard
 
