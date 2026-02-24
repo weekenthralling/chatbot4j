@@ -101,7 +101,7 @@ public class ConversationController {
             @RequestParam(defaultValue = "10") int size) {
         Page<Conversation> listed = conversationService.listConversationsByOwner(owner, page, size);
         if (listed.getContent().isEmpty()) {
-            new ResponseEntity<>(PageBean.emptyPage(page, size), HttpStatus.OK);
+            return new ResponseEntity<>(PageBean.emptyPage(page, size), HttpStatus.OK);
         }
         long total = listed.getTotalElements();
         List<Chat> chats = listed.getContent().stream()
