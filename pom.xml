@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springdoc.version>3.0.3</springdoc.version>
         <langchain4j.version>1.13.1-beta23</langchain4j.version>
-        <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.5.0</spotless-maven-plugin.version>
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     </properties>
 
